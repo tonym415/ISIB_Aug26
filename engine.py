@@ -10,9 +10,6 @@ import cgitb
 import os
 import traceback
 
-#if "REQUEST_METHOD" not in os.environ:
-#    import sys
-#    sys.path.append(os.path.realpath(os.path.dirname(__file__)))
 from app.Log import *
 from app.User import *
 from app.Category import *
