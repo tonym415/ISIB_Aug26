@@ -1,6 +1,7 @@
 #!/usr/bin/python
 """
-##!C:\Python34\python.exe -u
+#!C:\Python34\python.exe -u
+# 
 This script handles all of the processing of the debate site
 """
 import cgi
@@ -10,6 +11,11 @@ import cgitb
 import os
 import traceback
 
+
+# next 3 lines not for production
+if "REQUEST_METHOD" not in os.environ:
+    import sys
+    sys.path.append(os.path.realpath(os.path.dirname(__file__)))
 from app.Log import *
 from app.User import *
 from app.Category import *
@@ -22,7 +28,6 @@ cgitb.enable()
 
 # global fieldstorage object
 FSTOR = None
-
 
 def logAction(fs):
     l = {}
@@ -356,10 +361,11 @@ def main():
     #                   function="GG",
     #                   counter="2")
 
-    form = formMockup(id="random",
-                      user_id=36,
-                      function="GG",
-                      counter=1)
+    form = formMockup(
+            id="votePoll",
+            game_id=7,
+            function="GVG",
+            counter=1)
     """ valid user in db (DO NOT CHANGE: modify below)"""
     # form = formMockup(function="SUI", confirm_password="password",
     #                   first_name="Antonio", paypal_account="tonym415",

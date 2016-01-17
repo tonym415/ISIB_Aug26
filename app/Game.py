@@ -114,8 +114,10 @@ class Game(Entity):
         playerVotes = []
 
         # get all comments for the game
-        query = ("SELECT user_id, username, votes FROM game INNER JOIN users "
-                 "USING(user_id) WHERE game_id = %(game_id)s AND hasVoted = 1")
+        query = ("SELECT u.user_id, username, votes, credit_value  as wager FROM game "
+                "INNER JOIN users u USING(user_id) INNER JOIN game_queue "
+                "USING(game_id) JOIN credit_options ON (wager_id=credit_id) "
+                "WHERE game_id = %(game_id)s AND hasVoted = 1 LIMIT 0,3")
         playerVotes = self.executeQuery(query, params)
 
         # get user avatars
@@ -294,13 +296,13 @@ if __name__ == "__main__":
     #     'user_id': '36'
     # }
     info = {
-        'id': 'gameParametersCategoryOnly',
-        'user_id': '36',
+        'id': 'votePoll',
+        'game_id': '7',
         'function': 'GG',
         'counter': '0'
     }
     """ modify user information for testing """
     # info['stuff'] = "stuff"
 
-    print(Game(info).addToQueue())
-    print(Game(info).getGame())
+    #print(Game(info).addToQueue())
+    print(Game(info).getVotes())
