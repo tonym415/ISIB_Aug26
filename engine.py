@@ -372,7 +372,7 @@ def main():
     #                   first_name="Antonio", paypal_account="tonym415",
     #                   password="password", email="tonym415@gmail",
     #                   last_name="Moses", username="tonym415")
-    doFunc(form)
+    #doFunc(form)
 
 if "REQUEST_METHOD" in os.environ:
     FSTOR = cgi.FieldStorage()
