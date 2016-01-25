@@ -1,6 +1,7 @@
 #!C:\Python34\python.exe
 """
 The User class is used to handle all functions related to the User
+@author: Tony Moses
 """
 import os
 import io
@@ -14,12 +15,15 @@ from lib.Entity import Entity
 
 
 class User(Entity):
-
-    """ for User"""
-    """ initalize User object """
+    """
+    User Class
+    """
     _context = [__name__ == "__main__"]
 
     def __init__(self, *userInfo, **kwargs):
+        """
+        initalize User object
+        """
         super(User, self).__init__()
         # self._cnx = lib.db2.get_connection()
         # self.cursor = self._cnx.cursor(buffered=True, dictionary=True)

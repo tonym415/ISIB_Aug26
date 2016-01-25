@@ -14,7 +14,6 @@ class Game(Entity):
     """ for category"""
     """ initalize User object """
     _context = [__name__ == "__main__"]
-
     def __init__(self, *userInfo, **kwargs):
         super(Game, self).__init__()
         for dictionary in userInfo:

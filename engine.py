@@ -1,8 +1,7 @@
 #!/usr/bin/python
 """
-#!C:\Python34\python.exe -u
-# 
 This script handles all of the processing of the debate site
+@author: Tony Moses
 """
 import cgi
 #from formMockup import formMockup
@@ -30,13 +29,15 @@ cgitb.enable()
 FSTOR = None
 
 def logAction(fs):
+    """
+    function logs player actions
+    """
     l = {}
     if 'page' in fs.keys():
         l = Log(fs).getAllLogs()
     elif 'user_id' in fs.keys():
         l = Log(fs).newLog()
     returnJson(l)
-
 
 def testDep(data):
     """ test function for class functionality (not needed for production) """
