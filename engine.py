@@ -362,11 +362,11 @@ def main():
     #                   function="GG",
     #                   counter="2")
 
-    form = formMockup(
-            id="votePoll",
-            game_id=7,
-            function="GVG",
-            counter=1)
+    #form = formMockup(
+    #       id="votePoll",
+    #       game_id=7,
+    #       function="GVG",
+    #       counter=1)
     """ valid user in db (DO NOT CHANGE: modify below)"""
     # form = formMockup(function="SUI", confirm_password="password",
     #                   first_name="Antonio", paypal_account="tonym415",
