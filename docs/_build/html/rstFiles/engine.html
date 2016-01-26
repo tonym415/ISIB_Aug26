@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>engine module &mdash; ISIB Sphinx PyDocs 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="top" title="ISIB Sphinx PyDocs 1 documentation" href="../index.html" />
+    <link rel="up" title="cgi-bin" href="modules.html" />
+    <link rel="prev" title="app.User module" href="app.User.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="app.User.html" title="app.User module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">ISIB Sphinx PyDocs 1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" accesskey="U">cgi-bin</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-engine">
+<span id="engine-module"></span><h1>engine module<a class="headerlink" href="#module-engine" title="Permalink to this headline">¶</a></h1>
+<p>This script handles all of the processing of the debate site
+&#64;author: Tony Moses</p>
+<dl class="function">
+<dt id="engine.cgiFieldStorageToDict">
+<code class="descclassname">engine.</code><code class="descname">cgiFieldStorageToDict</code><span class="sig-paren">(</span><em>fieldstorage</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#cgiFieldStorageToDict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.cgiFieldStorageToDict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a plain dictionary from cgi.FieldStorage</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="engine.doFunc">
+<code class="descclassname">engine.</code><code class="descname">doFunc</code><span class="sig-paren">(</span><em>fStor</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#doFunc"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.doFunc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deciphers function to run based on POSTed parameters
+Executes the desired function with appropriate parameters</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="engine.feedback">
+<code class="descclassname">engine.</code><code class="descname">feedback</code><span class="sig-paren">(</span><em>fs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#feedback"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.feedback" title="Permalink to this definition">¶</a></dt>
+<dd><p>send user responses to admin</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="engine.gameFunctions">
+<code class="descclassname">engine.</code><code class="descname">gameFunctions</code><span class="sig-paren">(</span><em>fs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#gameFunctions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.gameFunctions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="engine.getAllUsers">
+<code class="descclassname">engine.</code><code class="descname">getAllUsers</code><span class="sig-paren">(</span><em>fs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#getAllUsers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.getAllUsers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="engine.getCategories">
+<code class="descclassname">engine.</code><code class="descname">getCategories</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#getCategories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.getCategories" title="Permalink to this definition">¶</a></dt>
+<dd><p>gathers all categories</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="engine.getCategoryQuestionsByID">
+<code class="descclassname">engine.</code><code class="descname">getCategoryQuestionsByID</code><span class="sig-paren">(</span><em>fs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#getCategoryQuestionsByID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.getCategoryQuestionsByID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="engine.logAction">
+<code class="descclassname">engine.</code><code class="descname">logAction</code><span class="sig-paren">(</span><em>fs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#logAction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.logAction" title="Permalink to this definition">¶</a></dt>
+<dd><p>function logs player actions</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="engine.main">
+<code class="descclassname">engine.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Self test this module using hardcoded data</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="engine.modifyCategory">
+<code class="descclassname">engine.</code><code class="descname">modifyCategory</code><span class="sig-paren">(</span><em>fs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#modifyCategory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.modifyCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>modify fs to be properly consumed by Category()</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="engine.modifyQuestion">
+<code class="descclassname">engine.</code><code class="descname">modifyQuestion</code><span class="sig-paren">(</span><em>fs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#modifyQuestion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.modifyQuestion" title="Permalink to this definition">¶</a></dt>
+<dd><p>modify fs to be properly consumed by Category()</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="engine.profileFunctions">
+<code class="descclassname">engine.</code><code class="descname">profileFunctions</code><span class="sig-paren">(</span><em>fs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#profileFunctions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.profileFunctions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="engine.returnJson">
+<code class="descclassname">engine.</code><code class="descname">returnJson</code><span class="sig-paren">(</span><em>data</em>, <em>toJSON=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#returnJson"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.returnJson" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes data (string) send back return value (JSON by default)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="engine.sendHeaders">
+<code class="descclassname">engine.</code><code class="descname">sendHeaders</code><span class="sig-paren">(</span><em>ctype='text/html'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#sendHeaders"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.sendHeaders" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends headers</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="engine.showParams">
+<code class="descclassname">engine.</code><code class="descname">showParams</code><span class="sig-paren">(</span><em>fs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#showParams"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.showParams" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="engine.submitUserInfo">
+<code class="descclassname">engine.</code><code class="descname">submitUserInfo</code><span class="sig-paren">(</span><em>fs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#submitUserInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.submitUserInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>submit user info to database</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="engine.testDep">
+<code class="descclassname">engine.</code><code class="descname">testDep</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#testDep"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.testDep" title="Permalink to this definition">¶</a></dt>
+<dd><p>test function for class functionality (not needed for production)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="engine.userAvailabilityCheck">
+<code class="descclassname">engine.</code><code class="descname">userAvailabilityCheck</code><span class="sig-paren">(</span><em>fs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#userAvailabilityCheck"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.userAvailabilityCheck" title="Permalink to this definition">¶</a></dt>
+<dd><p>test function for class functionality (not needed for production)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="engine.userFunctions">
+<code class="descclassname">engine.</code><code class="descname">userFunctions</code><span class="sig-paren">(</span><em>fs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#userFunctions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.userFunctions" title="Permalink to this definition">¶</a></dt>
+<dd><p>test function for class functionality (not needed for production)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="engine.validateUser">
+<code class="descclassname">engine.</code><code class="descname">validateUser</code><span class="sig-paren">(</span><em>fs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engine.html#validateUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine.validateUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>test function for class functionality (not needed for production)</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="app.User.html"
+                        title="previous chapter">app.User module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rstFiles/engine.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="app.User.html" title="app.User module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">ISIB Sphinx PyDocs 1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >cgi-bin</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Tony Moses.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
+    </div>
+  </body>
+</html>

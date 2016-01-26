@@ -1,0 +1,498 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>app.User &mdash; ISIB Sphinx PyDocs 1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/sidebar.js"></script>
+    <link rel="top" title="ISIB Sphinx PyDocs 1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">ISIB Sphinx PyDocs 1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for app.User</h1><div class="highlight"><pre>
+<span class="ch">#!C:\Python34\python.exe</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The User class is used to handle all functions related to the User</span>
+<span class="sd">@author: Tony Moses</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span>
+<span class="kn">from</span> <span class="nn">passlib.hash</span> <span class="kn">import</span> <span class="n">pbkdf2_sha256</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)))</span>
+
+<span class="kn">from</span> <span class="nn">lib.Entity</span> <span class="kn">import</span> <span class="n">Entity</span>
+
+
+<div class="viewcode-block" id="User"><a class="viewcode-back" href="../../rstFiles/app.User.html#app.User.User">[docs]</a><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    User Class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_context</span> <span class="o">=</span> <span class="p">[</span><span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">userInfo</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        initalize User object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">User</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="c1"># self._cnx = lib.db2.get_connection()</span>
+        <span class="c1"># self.cursor = self._cnx.cursor(buffered=True, dictionary=True)</span>
+        <span class="k">for</span> <span class="n">dictionary</span> <span class="ow">in</span> <span class="n">userInfo</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">:</span>
+                <span class="c1"># print(&#39;Key: %s&#39; % key)</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;user_&quot;</span> <span class="o">+</span> <span class="n">key</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+<div class="viewcode-block" id="User.sanitizeParams"><a class="viewcode-back" href="../../rstFiles/app.User.html#app.User.User.sanitizeParams">[docs]</a>    <span class="k">def</span> <span class="nf">sanitizeParams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">[</span><span class="mi">5</span><span class="p">:]:</span> <span class="n">v</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">)}</span></div>
+
+<div class="viewcode-block" id="User.getAllUsers"><a class="viewcode-back" href="../../rstFiles/app.User.html#app.User.User.getAllUsers">[docs]</a>    <span class="k">def</span> <span class="nf">getAllUsers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; get user information by name &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;page&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>  <span class="c1"># for use with jqGrid</span>
+            <span class="n">ops</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;eq&#39;</span><span class="p">:</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span>   <span class="c1"># equal</span>
+                <span class="s1">&#39;ne&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;&gt;&#39;</span><span class="p">,</span>  <span class="c1"># not equal</span>
+                <span class="s1">&#39;lt&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;&#39;</span><span class="p">,</span>   <span class="c1"># less than</span>
+                <span class="s1">&#39;le&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">,</span>  <span class="c1"># less than or equal to</span>
+                <span class="s1">&#39;gt&#39;</span><span class="p">:</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">,</span>   <span class="c1"># greater than</span>
+                <span class="s1">&#39;ge&#39;</span><span class="p">:</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">,</span>  <span class="c1"># greater than or equal to</span>
+                <span class="s1">&#39;bw&#39;</span><span class="p">:</span> <span class="s1">&#39;LIKE&#39;</span><span class="p">,</span>  <span class="c1"># begins with</span>
+                <span class="s1">&#39;bn&#39;</span><span class="p">:</span> <span class="s1">&#39;NOT LIKE&#39;</span><span class="p">,</span>  <span class="c1"># doesn&#39;t begin with</span>
+                <span class="s1">&#39;in&#39;</span><span class="p">:</span> <span class="s1">&#39;LIKE&#39;</span><span class="p">,</span>  <span class="c1"># is in</span>
+                <span class="s1">&#39;ni&#39;</span><span class="p">:</span> <span class="s1">&#39;NOT LIKE&#39;</span><span class="p">,</span>  <span class="c1"># is not in</span>
+                <span class="s1">&#39;ew&#39;</span><span class="p">:</span> <span class="s1">&#39;LIKE&#39;</span><span class="p">,</span>  <span class="c1"># ends with</span>
+                <span class="s1">&#39;en&#39;</span><span class="p">:</span> <span class="s1">&#39;NOT LIKE&#39;</span><span class="p">,</span>  <span class="c1"># doesn&#39;t end with</span>
+                <span class="s1">&#39;cn&#39;</span><span class="p">:</span> <span class="s1">&#39;LIKE&#39;</span><span class="p">,</span>  <span class="c1"># contains</span>
+                <span class="s1">&#39;nc&#39;</span><span class="p">:</span> <span class="s1">&#39;NOT LIKE&#39;</span>  <span class="c1"># doesn&#39;t contain</span>
+            <span class="p">}</span>
+
+            <span class="k">def</span> <span class="nf">getWhereClause</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">oper</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">oper</span> <span class="o">==</span> <span class="s1">&#39;bw&#39;</span> <span class="ow">or</span> <span class="n">oper</span> <span class="o">==</span> <span class="s1">&#39;bn&#39;</span><span class="p">:</span>
+                    <span class="n">val</span> <span class="o">+=</span> <span class="s1">&#39;%&#39;</span>
+                <span class="k">if</span> <span class="n">oper</span> <span class="o">==</span> <span class="s1">&#39;ew&#39;</span> <span class="ow">or</span> <span class="n">oper</span> <span class="o">==</span> <span class="s1">&#39;en&#39;</span><span class="p">:</span>
+                    <span class="n">val</span> <span class="o">+=</span> <span class="s1">&#39;%&#39;</span> <span class="o">+</span> <span class="n">val</span>
+                <span class="k">if</span> <span class="n">oper</span> <span class="o">==</span> <span class="s1">&#39;cn&#39;</span> <span class="ow">or</span> <span class="n">oper</span> <span class="o">==</span> <span class="s1">&#39;nc&#39;</span> <span class="ow">or</span> <span class="n">oper</span> <span class="o">==</span> <span class="s1">&#39;in&#39;</span> <span class="ow">or</span> <span class="n">oper</span> <span class="o">==</span> <span class="s1">&#39;ni&#39;</span><span class="p">:</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="s1">&#39;%&#39;</span> <span class="o">+</span> <span class="n">val</span> <span class="o">+</span> <span class="s1">&#39;%&#39;</span>
+                <span class="k">return</span> <span class="s2">&quot;  </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> &#39;</span><span class="si">%s</span><span class="s2">&#39; &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">ops</span><span class="p">[</span><span class="n">oper</span><span class="p">],</span> <span class="n">val</span><span class="p">)</span>
+
+            <span class="n">where</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">searchBool</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;_search&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;_search&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">params</span><span class="p">[</span>
+                <span class="s1">&#39;_search&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span> <span class="k">else</span> <span class="bp">False</span>
+            <span class="n">searchField</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;searchField&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;searchField&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="bp">False</span>
+            <span class="n">searchOper</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;searchOper&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;searchOper&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="bp">False</span>
+            <span class="n">searchString</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;searchString&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;searchString&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="bp">False</span>
+            <span class="n">filters</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;filters&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;filters&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="bp">False</span>
+
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;page&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;page&#39;</span><span class="p">]),</span>
+                <span class="s1">&#39;limit&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]),</span>
+                <span class="s1">&#39;sidx&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;sidx&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;sidx&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s1">&#39;sord&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;sord&#39;</span><span class="p">]</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="n">searchBool</span><span class="p">:</span>
+                <span class="n">where</span> <span class="o">+=</span> <span class="s2">&quot; WHERE &quot;</span>
+                <span class="k">if</span> <span class="n">searchField</span><span class="p">:</span>
+                    <span class="n">where</span> <span class="o">+=</span> <span class="n">getWhereClause</span><span class="p">(</span><span class="n">searchField</span><span class="p">,</span> <span class="n">searchOper</span><span class="p">,</span>
+                                            <span class="n">searchString</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">filters</span><span class="p">:</span>   <span class="c1"># filter options</span>
+                    <span class="n">buildwhere</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+                    <span class="c1"># handle string value of cgi var</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filters</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                        <span class="n">filters</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">filters</span><span class="p">)</span>
+
+                    <span class="n">rules</span> <span class="o">=</span> <span class="n">filters</span><span class="p">[</span><span class="s1">&#39;rules&#39;</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rules</span><span class="p">)):</span>
+                        <span class="n">field</span> <span class="o">=</span> <span class="n">rules</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s1">&#39;field&#39;</span><span class="p">]</span>
+                        <span class="n">op</span> <span class="o">=</span> <span class="n">rules</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s1">&#39;op&#39;</span><span class="p">]</span>
+                        <span class="n">data</span> <span class="o">=</span> <span class="n">rules</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+
+                        <span class="k">if</span> <span class="n">idx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">buildwhere</span> <span class="o">=</span> <span class="n">filters</span><span class="p">[</span><span class="s1">&#39;groupOp&#39;</span><span class="p">]</span>
+                            <span class="n">buildwhere</span> <span class="o">+=</span> <span class="n">getWhereClause</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">buildwhere</span> <span class="o">+=</span> <span class="n">getWhereClause</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+                        <span class="n">where</span> <span class="o">+=</span> <span class="n">buildwhere</span>
+
+            <span class="c1"># get count of records</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT COUNT(*) as count FROM  users &quot;</span>
+                     <span class="s2">&quot;INNER JOIN roles USING(role_id) &quot;</span><span class="p">)</span>
+            <span class="n">query</span> <span class="o">+=</span> <span class="n">where</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="p">())</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;count&#39;</span><span class="p">]</span>
+
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;records&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">count</span> <span class="o">/</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;limit&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="n">vPage</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;page&#39;</span><span class="p">]</span>
+            <span class="n">vLimit</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;limit&#39;</span><span class="p">]</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">vPage</span> <span class="o">*</span> <span class="n">vLimit</span><span class="p">)</span> <span class="o">-</span> <span class="n">vLimit</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT user_id, first_name,last_name, email, &quot;</span>
+                     <span class="s2">&quot;username, password , credit , wins, losses, &quot;</span>
+                     <span class="s2">&quot;paypal_account, roles.role, &quot;</span>
+                     <span class="s2">&quot;DATE_FORMAT(created, &#39;</span><span class="si">%d</span><span class="s2"> %b %Y %T&#39;) as created, active  &quot;</span>
+                     <span class="s2">&quot;FROM  users INNER JOIN roles USING(role_id) &quot;</span><span class="p">)</span>
+            <span class="n">query</span> <span class="o">+=</span> <span class="n">where</span>
+            <span class="n">query</span> <span class="o">+=</span> <span class="s2">&quot; ORDER BY </span><span class="si">%(sidx)s</span><span class="s2"> </span><span class="si">%(sord)s</span><span class="s2"> LIMIT </span><span class="si">%(start)s</span><span class="s2">, </span><span class="si">%(limit)s</span><span class="s2">&quot;</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">params</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT user_id, first_name,last_name, email,&quot;</span>
+                     <span class="s2">&quot;username, password , credit , wins, losses,&quot;</span>
+                     <span class="s2">&quot;paypal_account, roles.role, &quot;</span>
+                     <span class="s2">&quot;DATE_FORMAT(created, &#39;</span><span class="si">%d</span><span class="s2"> %b %Y %T&#39;) as created, active  &quot;</span>
+                     <span class="s2">&quot;FROM  users INNER JOIN roles USING(role_id) WHERE 1&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="p">())</span></div>
+
+<div class="viewcode-block" id="User.getUserCookie"><a class="viewcode-back" href="../../rstFiles/app.User.html#app.User.User.getUserCookie">[docs]</a>    <span class="k">def</span> <span class="nf">getUserCookie</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot; get user information by name &quot;&quot;&quot;</span>
+        <span class="c1"># if no user is found by the given name return empty dictionary</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT u.user_id, username, role FROM users u LEFT JOIN roles r &quot;</span>
+                 <span class="s2">&quot;USING(role_id) LEFT JOIN users_metadata m ON u.user_id=m.user_id &quot;</span>
+                 <span class="s2">&quot;WHERE u.active = 1 AND u.username = </span><span class="si">%(username)s</span><span class="s2"> AND &quot;</span>
+                 <span class="s2">&quot;meta_name = &#39;theme&#39;&quot;</span><span class="p">)</span>
+
+        <span class="n">retDict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># get metadata along with basic data</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT meta_name, data FROM users_metadata WHERE user_id = &quot;</span>
+                 <span class="s2">&quot;</span><span class="si">%(user_id)s</span><span class="s2"> AND meta_name IN (&#39;avatar&#39;,&#39;theme&#39;)&quot;</span><span class="p">)</span>
+        <span class="n">metaList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">retDict</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">metaList</span><span class="p">:</span>
+            <span class="n">retDict</span><span class="p">[</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;meta_name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">retDict</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="User.getUserByName"><a class="viewcode-back" href="../../rstFiles/app.User.html#app.User.User.getUserByName">[docs]</a>    <span class="k">def</span> <span class="nf">getUserByName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; get user information by name &quot;&quot;&quot;</span>
+        <span class="c1"># if no user is found by the given name return empty dictionary</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT  u.user_id, first_name, username, role, password, &quot;</span>
+                 <span class="s2">&quot;last_name, email, credit, wins, losses, paypal_account, &quot;</span>
+                 <span class="s2">&quot;u.created, active FROM users u LEFT JOIN roles r USING(role_id) &quot;</span>
+                 <span class="s2">&quot;LEFT JOIN users_metadata m ON u.user_id=m.user_id &quot;</span>
+                 <span class="s2">&quot;WHERE u.active = 1 AND u.username = </span><span class="si">%(username)s</span><span class="s2"> AND &quot;</span>
+                 <span class="s2">&quot;meta_name = &#39;theme&#39;&quot;</span><span class="p">)</span>
+
+        <span class="n">retDict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">meta</span><span class="p">:</span>
+            <span class="c1"># get metadata along with basic data</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT meta_name, data FROM users_metadata &quot;</span>
+                     <span class="s2">&quot;WHERE user_id = </span><span class="si">%(user_id)s</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">metaList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">metaList</span><span class="p">:</span>
+                <span class="n">retDict</span><span class="p">[</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;meta_name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">retDict</span></div>
+
+<div class="viewcode-block" id="User.getUserByID"><a class="viewcode-back" href="../../rstFiles/app.User.html#app.User.User.getUserByID">[docs]</a>    <span class="k">def</span> <span class="nf">getUserByID</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; get user information by name &quot;&quot;&quot;</span>
+        <span class="c1"># if no user is found by the given name return empty dictionary</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT  u.user_id, first_name, username, role, &quot;</span>
+                 <span class="s2">&quot;last_name, email, credit, wins, losses, paypal_account, &quot;</span>
+                 <span class="s2">&quot;u.created, active FROM users u LEFT JOIN roles r USING(role_id) &quot;</span>
+                 <span class="s2">&quot;LEFT JOIN users_metadata m ON u.user_id=m.user_id &quot;</span>
+                 <span class="s2">&quot;WHERE u.active = 1 AND u.user_id = </span><span class="si">%(user_id)s</span><span class="s2"> AND &quot;</span>
+                 <span class="s2">&quot;meta_name = &#39;theme&#39;&quot;</span><span class="p">)</span>
+
+        <span class="n">retDict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">meta</span><span class="p">:</span>
+            <span class="c1"># get metadata along with basic data</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT meta_name, data FROM users_metadata &quot;</span>
+                     <span class="s2">&quot;WHERE user_id = </span><span class="si">%(user_id)s</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">metaList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="n">metaList</span><span class="p">:</span>
+                <span class="n">retDict</span><span class="p">[</span><span class="n">rec</span><span class="p">[</span><span class="s1">&#39;meta_name&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">retDict</span></div>
+
+<div class="viewcode-block" id="User.getUserTrackRecord"><a class="viewcode-back" href="../../rstFiles/app.User.html#app.User.User.getUserTrackRecord">[docs]</a>    <span class="k">def</span> <span class="nf">getUserTrackRecord</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; get user win/loss information &quot;&quot;&quot;</span>
+        <span class="c1"># if no user is found by the given name return empty dictionary</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT  wins, losses FROM users WHERE user_id = </span><span class="si">%(user_id)s</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="User.updateUser"><a class="viewcode-back" href="../../rstFiles/app.User.html#app.User.User.updateUser">[docs]</a>    <span class="k">def</span> <span class="nf">updateUser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; update user info &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+        <span class="c1"># rename id key for query string</span>
+        <span class="k">if</span> <span class="s1">&#39;id&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;user_user_id&quot;</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">])</span>
+
+        <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;UPDATE users SET&quot;</span>
+        <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;oper&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;edit&#39;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+                <span class="c1"># remove unnecessary keys</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;oper&#39;</span> <span class="ow">or</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;user_id&#39;</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">elif</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;role&#39;</span><span class="p">:</span>
+                    <span class="c1"># correct column name</span>
+                    <span class="n">k</span> <span class="o">=</span> <span class="s1">&#39;role_id&#39;</span>
+                    <span class="n">query</span> <span class="o">+=</span> <span class="s2">&quot; </span><span class="si">%s</span><span class="s2"> = </span><span class="si">%r</span><span class="s2">,&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;role&#39;</span><span class="p">])</span>
+                    <span class="k">continue</span>
+                <span class="k">elif</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;active&#39;</span><span class="p">:</span>
+                    <span class="c1"># correct values for columns</span>
+                    <span class="n">params</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="n">params</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Yes&quot;</span><span class="p">]</span>
+                <span class="n">query</span> <span class="o">+=</span> <span class="s2">&quot; </span><span class="si">%s</span><span class="s2"> = </span><span class="si">%r</span><span class="s2">,&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+
+            <span class="c1"># remove trailing comma</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="n">query</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; WHERE user_id = </span><span class="si">%(user_id)s</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;oper&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;del&#39;</span><span class="p">:</span>
+            <span class="n">query</span> <span class="o">+=</span> <span class="s1">&#39; active = 0 WHERE user_id = </span><span class="si">%(user_id)s</span><span class="s1">&#39;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">executeModifyQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;user_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">lastrowid</span><span class="p">,</span> <span class="s1">&#39;stm&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">statement</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="User.submitUser"><a class="viewcode-back" href="../../rstFiles/app.User.html#app.User.User.submitUser">[docs]</a>    <span class="k">def</span> <span class="nf">submitUser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; inserts user info into the database &quot;&quot;&quot;</span>
+        <span class="n">returnObj</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;user_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;INSERT INTO  users&quot;</span>
+                 <span class="s2">&quot;(first_name ,  last_name , email ,  username ,  password ,&quot;</span>
+                 <span class="s2">&quot;paypal_account) VALUES (</span><span class="si">%(first_name)s</span><span class="s2">, </span><span class="si">%(last_name)s</span><span class="s2">,&quot;</span>
+                 <span class="s2">&quot;</span><span class="si">%(email)s</span><span class="s2">,</span><span class="si">%(username)s</span><span class="s2">, </span><span class="si">%(password)s</span><span class="s2">, </span><span class="si">%(paypal_account)s</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+        <span class="c1"># extract only user info from class __dict__</span>
+        <span class="n">query_params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+        <span class="c1"># hash password</span>
+        <span class="n">query_params</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pbkdf2_sha256</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span>
+            <span class="n">query_params</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">],</span> <span class="n">rounds</span><span class="o">=</span><span class="mi">200000</span><span class="p">,</span> <span class="n">salt_size</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">uid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeModifyQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">query_params</span><span class="p">)</span>
+            <span class="n">uid</span> <span class="o">=</span> <span class="n">uid</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+            <span class="c1"># add user_id to current instance</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;user_user_id&quot;</span><span class="p">,</span> <span class="n">uid</span><span class="p">)</span>
+
+            <span class="n">obj</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;user_id&#39;</span><span class="p">:</span> <span class="n">uid</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="s1">&#39;redmond&#39;</span><span class="p">,</span> <span class="s1">&#39;meta_name&#39;</span><span class="p">:</span> <span class="s1">&#39;theme&#39;</span><span class="p">}</span>
+            <span class="c1"># insert default theme for user</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;INSERT INTO users_metadata (user_id, meta_name, data) &quot;</span>
+                     <span class="s2">&quot; VALUES (</span><span class="si">%(user_id)s</span><span class="s2">, </span><span class="si">%(meta_name)s</span><span class="s2">, </span><span class="si">%(data)s</span><span class="s2">)&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">executeModifyQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+            <span class="n">returnObj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getUserByID</span><span class="p">()</span>
+        <span class="k">except</span> <span class="bp">self</span><span class="o">.</span><span class="n">db2</span><span class="o">.</span><span class="n">_connector</span><span class="o">.</span><span class="n">IntegrityError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="n">returnObj</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Error: {}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">returnObj</span></div>
+
+<div class="viewcode-block" id="User.isValidUser"><a class="viewcode-back" href="../../rstFiles/app.User.html#app.User.User.isValidUser">[docs]</a>    <span class="k">def</span> <span class="nf">isValidUser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">info</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; determine if user is valid based on username/password &quot;&quot;&quot;</span>
+        <span class="c1"># userInfo should be provided by calling function</span>
+        <span class="k">if</span> <span class="n">info</span><span class="p">:</span>
+            <span class="n">userInfo</span> <span class="o">=</span> <span class="n">info</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">userInfo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getUserByName</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">userInfo</span><span class="p">:</span>
+            <span class="n">validUser</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># test given password against database password</span>
+            <span class="n">hashed_pw</span> <span class="o">=</span> <span class="n">userInfo</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">]</span>
+            <span class="n">validUser</span> <span class="o">=</span> <span class="n">pbkdf2_sha256</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_password</span><span class="p">,</span> <span class="n">hashed_pw</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">validUser</span></div>
+
+<div class="viewcode-block" id="User.isUser"><a class="viewcode-back" href="../../rstFiles/app.User.html#app.User.User.isUser">[docs]</a>    <span class="k">def</span> <span class="nf">isUser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; checking for username availability &quot;&quot;&quot;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;SELECT  username  FROM  users  WHERE username = </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_username</span><span class="p">,))</span>
+        <span class="sd">&quot;&quot;&quot; if number of rows fields is bigger them 0 that means it&#39;s NOT</span>
+<span class="sd">         available returning 0, 1 otherwise</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">rowcount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="User.profileUpdate"><a class="viewcode-back" href="../../rstFiles/app.User.html#app.User.User.profileUpdate">[docs]</a>    <span class="k">def</span> <span class="nf">profileUpdate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">FIELDSTORE</span><span class="p">):</span>
+        <span class="c1"># get column names for user table</span>
+        <span class="n">userCols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getColNames</span><span class="p">(</span><span class="s1">&#39;users&#39;</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+
+        <span class="c1"># handle avatar</span>
+        <span class="k">if</span> <span class="s1">&#39;avatar&#39;</span> <span class="ow">in</span> <span class="n">FIELDSTORE</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">FIELDSTORE</span><span class="p">[</span><span class="s1">&#39;avatar&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">filename</span><span class="p">:</span>
+
+            <span class="n">fileItem</span> <span class="o">=</span> <span class="n">FIELDSTORE</span><span class="p">[</span><span class="s1">&#39;avatar&#39;</span><span class="p">]</span>
+            <span class="n">fileName</span><span class="p">,</span> <span class="n">fileExt</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">fileItem</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>  <span class="c1"># Windows needs stdio set for binary mode.</span>
+                <span class="kn">import</span> <span class="nn">msvcrt</span>
+                <span class="n">msvcrt</span><span class="o">.</span><span class="n">setmode</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">O_BINARY</span><span class="p">)</span>  <span class="c1"># stdin  = 0</span>
+                <span class="n">msvcrt</span><span class="o">.</span><span class="n">setmode</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">O_BINARY</span><span class="p">)</span>  <span class="c1"># stdout = 1</span>
+            <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="c1"># strip leading path from file name to avoid directory traversal attacks</span>
+            <span class="c1"># fname = os.path.basename(fileitem.filename)</span>
+            <span class="c1"># create filename based on user_id and string</span>
+            <span class="n">fname</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;_avatar&quot;</span> <span class="o">+</span> <span class="n">fileExt</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="c1"># build absolute path to files directory</span>
+            <span class="n">base_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span>
+            <span class="n">dir_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;..&#39;</span><span class="p">,</span> <span class="s1">&#39;avatars&#39;</span><span class="p">))</span>
+
+            <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">dir_path</span><span class="p">,</span> <span class="n">fname</span><span class="p">),</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">fileItem</span><span class="o">.</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;The file &quot;</span><span class="si">%s</span><span class="s1">&quot; was uploaded successfully&#39;</span> <span class="o">%</span> <span class="n">fname</span>
+
+        <span class="c1"># delete extraneous key</span>
+        <span class="k">del</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;UPDATE users SET first_name = </span><span class="si">%(first_name)s</span><span class="s2">, &quot;</span>
+                 <span class="s2">&quot;last_name = </span><span class="si">%(last_name)s</span><span class="s2">, email = </span><span class="si">%(email)s</span><span class="s2">, &quot;</span>
+                 <span class="s2">&quot;paypal_account = </span><span class="si">%(paypal_account)s</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># add password query fragment if necessary</span>
+        <span class="k">if</span> <span class="s1">&#39;newpassword&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">query</span> <span class="o">+=</span> <span class="s2">&quot;, password = </span><span class="si">%(password)s</span><span class="s2">&quot;</span>
+        <span class="n">query</span> <span class="o">+=</span> <span class="s2">&quot; WHERE user_id = </span><span class="si">%(user_id)s</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executeModifyQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+        <span class="c1"># get data to enter in to the meta table for users</span>
+        <span class="n">metaCols</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">metaObj</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">userCols</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;file_id&#39;</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="n">metaObj</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span>
+                <span class="n">metaObj</span><span class="p">[</span><span class="s1">&#39;meta_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="s1">&#39;avatar&#39;</span><span class="p">:</span>
+                    <span class="n">metaObj</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fname</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">metaObj</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="n">metaCols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metaObj</span><span class="p">)</span>
+
+        <span class="n">retVal</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">metaCols</span><span class="p">:</span>
+            <span class="c1"># check to see if record exists</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT * FROM users_metadata WHERE user_id = </span><span class="si">%(user_id)s</span><span class="s2"> &quot;</span>
+                     <span class="s2">&quot; and meta_name = </span><span class="si">%(meta_name)s</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">rec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">rec</span><span class="p">:</span>
+                <span class="c1"># if record exist update</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;UPDATE users_metadata SET data = </span><span class="si">%(data)s</span><span class="s2"> WHERE &quot;</span>
+                         <span class="s2">&quot; user_id = </span><span class="si">%(user_id)s</span><span class="s2"> and meta_name = </span><span class="si">%(meta_name)s</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># if record does not exist insert</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;INSERT INTO users_metadata (user_id, meta_name, data) &quot;</span>
+                         <span class="s2">&quot;VALUES (</span><span class="si">%(user_id)s</span><span class="s2">, </span><span class="si">%(meta_name)s</span><span class="s2">, </span><span class="si">%(data)s</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+            <span class="n">retVal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeModifyQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="s1">&#39;error&#39;</span> <span class="ow">in</span> <span class="n">retVal</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">retVal</span>
+
+        <span class="k">return</span> <span class="s2">&quot;Success&quot;</span></div></div>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;last_name&quot;</span><span class="p">:</span> <span class="s2">&quot;jury&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;first_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Sam&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;sam@gmail&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;password&quot;</span><span class="p">:</span> <span class="s2">&quot;password&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;paypal_account&quot;</span><span class="p">:</span> <span class="s2">&quot;sjury&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="s2">&quot;sam&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;function&quot;</span><span class="p">:</span> <span class="s2">&quot;SUI&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;signup&quot;</span><span class="p">}</span>
+    <span class="c1"># &quot;&quot;&quot; valid user in db (DO NOT CHANGE: modify below)&quot;&quot;&quot;</span>
+    <span class="c1"># info = {&quot;confirm_password&quot;: &quot;password&quot;, &quot;first_name&quot;:</span>
+    <span class="c1">#         &quot;Antonio&quot;, &quot;paypal_account&quot;: &quot;tonym415&quot;, &quot;password&quot;:</span>
+    <span class="c1">#         &quot;password&quot;, &quot;email&quot;: &quot;tonym415@gmail.com&quot;, &quot;last_name&quot;:</span>
+    <span class="c1">#         &quot;Moses&quot;, &quot;username&quot;: &quot;tonym415&quot;}</span>
+
+    <span class="sd">&quot;&quot;&quot; modify user information for testing &quot;&quot;&quot;</span>
+    <span class="c1"># info[&#39;username&#39;] = &quot;user&quot;</span>
+    <span class="c1"># info[&#39;password&#39;] = &quot;password&quot;</span>
+
+    <span class="sd">&quot;&quot;&quot; remove  from data dict &quot;&quot;&quot;</span>
+    <span class="n">u_info</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">info</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+              <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">info</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="s1">&#39;function&#39;</span> <span class="ow">and</span> <span class="s1">&#39;_password&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">i</span><span class="p">}</span>
+    <span class="c1"># print(info)</span>
+
+    <span class="c1"># print(User(info).updateUser())</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">u_info</span><span class="p">)</span>
+    <span class="c1"># print(u.isValidUser())</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">submitUser</span><span class="p">())</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">ISIB Sphinx PyDocs 1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Tony Moses.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
+    </div>
+  </body>
+</html>

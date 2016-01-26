@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>app.Log &mdash; ISIB Sphinx PyDocs 1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/sidebar.js"></script>
+    <link rel="top" title="ISIB Sphinx PyDocs 1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">ISIB Sphinx PyDocs 1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for app.Log</h1><div class="highlight"><pre>
+<span class="ch">#!C:\Python34\python.exe</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The User class is used to handle all functions related to the Log</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)))</span>
+
+<span class="kn">from</span> <span class="nn">lib.Entity</span> <span class="kn">import</span> <span class="n">Entity</span>
+
+
+<div class="viewcode-block" id="Log"><a class="viewcode-back" href="../../rstFiles/app.Log.html#app.Log.Log">[docs]</a><span class="k">class</span> <span class="nc">Log</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot; for category&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; initalize User object &quot;&quot;&quot;</span>
+    <span class="n">_context</span> <span class="o">=</span> <span class="p">[</span><span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">userInfo</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Log</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">dictionary</span> <span class="ow">in</span> <span class="n">userInfo</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;user_&quot;</span> <span class="o">+</span> <span class="n">key</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+<div class="viewcode-block" id="Log.sanitizeParams"><a class="viewcode-back" href="../../rstFiles/app.Log.html#app.Log.Log.sanitizeParams">[docs]</a>    <span class="k">def</span> <span class="nf">sanitizeParams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">[</span><span class="mi">5</span><span class="p">:]:</span> <span class="n">v</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">)}</span></div>
+
+<div class="viewcode-block" id="Log.newLog"><a class="viewcode-back" href="../../rstFiles/app.Log.html#app.Log.Log.newLog">[docs]</a>    <span class="k">def</span> <span class="nf">newLog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; insert new category with/without parent_id &quot;&quot;&quot;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;INSERT INTO log(user_id, description, action, result, detail)&quot;</span>
+                 <span class="s2">&quot; VALUES (</span><span class="si">%(user_id)s</span><span class="s2">, </span><span class="si">%(description)s</span><span class="s2">, </span><span class="si">%(action)s</span><span class="s2">, </span><span class="si">%(result)s</span><span class="s2">,&quot;</span>
+                 <span class="s2">&quot; </span><span class="si">%(detail)s</span><span class="s2">) &quot;</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;action&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="s1">&#39;action&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;action&#39;</span><span class="p">]</span>
+        <span class="n">returnVal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeModifyQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">lastrowid</span><span class="p">}</span> <span class="k">if</span> <span class="s1">&#39;error&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">returnVal</span> <span class="k">else</span> <span class="p">{</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="n">returnVal</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="Log.getAllLogs"><a class="viewcode-back" href="../../rstFiles/app.Log.html#app.Log.Log.getAllLogs">[docs]</a>    <span class="k">def</span> <span class="nf">getAllLogs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; get all logs &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;page&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>  <span class="c1"># for use with jqGrid</span>
+            <span class="n">ops</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;eq&#39;</span><span class="p">:</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span>   <span class="c1"># equal</span>
+                <span class="s1">&#39;ne&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;&gt;&#39;</span><span class="p">,</span>  <span class="c1"># not equal</span>
+                <span class="s1">&#39;lt&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;&#39;</span><span class="p">,</span>   <span class="c1"># less than</span>
+                <span class="s1">&#39;le&#39;</span><span class="p">:</span> <span class="s1">&#39;&lt;=&#39;</span><span class="p">,</span>  <span class="c1"># less than or equal to</span>
+                <span class="s1">&#39;gt&#39;</span><span class="p">:</span> <span class="s1">&#39;&gt;&#39;</span><span class="p">,</span>   <span class="c1"># greater than</span>
+                <span class="s1">&#39;ge&#39;</span><span class="p">:</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">,</span>  <span class="c1"># greater than or equal to</span>
+                <span class="s1">&#39;bw&#39;</span><span class="p">:</span> <span class="s1">&#39;LIKE&#39;</span><span class="p">,</span>  <span class="c1"># begins with</span>
+                <span class="s1">&#39;bn&#39;</span><span class="p">:</span> <span class="s1">&#39;NOT LIKE&#39;</span><span class="p">,</span>  <span class="c1"># doesn&#39;t begin with</span>
+                <span class="s1">&#39;in&#39;</span><span class="p">:</span> <span class="s1">&#39;LIKE&#39;</span><span class="p">,</span>  <span class="c1"># is in</span>
+                <span class="s1">&#39;ni&#39;</span><span class="p">:</span> <span class="s1">&#39;NOT LIKE&#39;</span><span class="p">,</span>  <span class="c1"># is not in</span>
+                <span class="s1">&#39;ew&#39;</span><span class="p">:</span> <span class="s1">&#39;LIKE&#39;</span><span class="p">,</span>  <span class="c1"># ends with</span>
+                <span class="s1">&#39;en&#39;</span><span class="p">:</span> <span class="s1">&#39;NOT LIKE&#39;</span><span class="p">,</span>  <span class="c1"># doesn&#39;t end with</span>
+                <span class="s1">&#39;cn&#39;</span><span class="p">:</span> <span class="s1">&#39;LIKE&#39;</span><span class="p">,</span>  <span class="c1"># contains</span>
+                <span class="s1">&#39;nc&#39;</span><span class="p">:</span> <span class="s1">&#39;NOT LIKE&#39;</span>  <span class="c1"># doesn&#39;t contain</span>
+            <span class="p">}</span>
+
+            <span class="k">def</span> <span class="nf">getWhereClause</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">oper</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">oper</span> <span class="o">==</span> <span class="s1">&#39;bw&#39;</span> <span class="ow">or</span> <span class="n">oper</span> <span class="o">==</span> <span class="s1">&#39;bn&#39;</span><span class="p">:</span>
+                    <span class="n">val</span> <span class="o">+=</span> <span class="s1">&#39;%&#39;</span>
+                <span class="k">if</span> <span class="n">oper</span> <span class="o">==</span> <span class="s1">&#39;ew&#39;</span> <span class="ow">or</span> <span class="n">oper</span> <span class="o">==</span> <span class="s1">&#39;en&#39;</span><span class="p">:</span>
+                    <span class="n">val</span> <span class="o">+=</span> <span class="s1">&#39;%&#39;</span> <span class="o">+</span> <span class="n">val</span>
+                <span class="k">if</span> <span class="n">oper</span> <span class="o">==</span> <span class="s1">&#39;cn&#39;</span> <span class="ow">or</span> <span class="n">oper</span> <span class="o">==</span> <span class="s1">&#39;nc&#39;</span> <span class="ow">or</span> <span class="n">oper</span> <span class="o">==</span> <span class="s1">&#39;in&#39;</span> <span class="ow">or</span> <span class="n">oper</span> <span class="o">==</span> <span class="s1">&#39;ni&#39;</span><span class="p">:</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="s1">&#39;%&#39;</span> <span class="o">+</span> <span class="n">val</span> <span class="o">+</span> <span class="s1">&#39;%&#39;</span>
+                <span class="k">return</span> <span class="s2">&quot; </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> &#39;</span><span class="si">%s</span><span class="s2">&#39; &quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">ops</span><span class="p">[</span><span class="n">oper</span><span class="p">],</span> <span class="n">val</span><span class="p">)</span>
+
+            <span class="n">where</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">searchBool</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;_search&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;_search&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">params</span><span class="p">[</span>
+                <span class="s1">&#39;_search&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span> <span class="k">else</span> <span class="bp">False</span>
+            <span class="n">searchField</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;searchField&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;searchField&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="bp">False</span>
+            <span class="n">searchOper</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;searchOper&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;searchOper&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="bp">False</span>
+            <span class="n">searchString</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;searchString&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;searchString&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="bp">False</span>
+            <span class="n">filters</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;filters&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;filters&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="bp">False</span>
+
+            <span class="k">if</span> <span class="n">searchBool</span><span class="p">:</span>
+                <span class="n">where</span> <span class="o">+=</span> <span class="s2">&quot; WHERE &quot;</span>
+                <span class="k">if</span> <span class="n">searchField</span><span class="p">:</span>
+                    <span class="n">where</span> <span class="o">+=</span> <span class="n">getWhereClause</span><span class="p">(</span><span class="n">searchField</span><span class="p">,</span> <span class="n">searchOper</span><span class="p">,</span>
+                                            <span class="n">searchString</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">filters</span><span class="p">:</span>   <span class="c1"># filter options</span>
+                    <span class="n">buildwhere</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+                    <span class="c1"># handle string value of cgi var</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">filters</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                        <span class="n">filters</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">filters</span><span class="p">)</span>
+
+                    <span class="n">rules</span> <span class="o">=</span> <span class="n">filters</span><span class="p">[</span><span class="s1">&#39;rules&#39;</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rules</span><span class="p">)):</span>
+                        <span class="n">field</span> <span class="o">=</span> <span class="n">rules</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s1">&#39;field&#39;</span><span class="p">]</span>
+                        <span class="n">op</span> <span class="o">=</span> <span class="n">rules</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s1">&#39;op&#39;</span><span class="p">]</span>
+                        <span class="n">data</span> <span class="o">=</span> <span class="n">rules</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+
+                        <span class="k">if</span> <span class="n">idx</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">buildwhere</span> <span class="o">=</span> <span class="n">filters</span><span class="p">[</span><span class="s1">&#39;groupOp&#39;</span><span class="p">]</span>
+                            <span class="n">buildwhere</span> <span class="o">+=</span> <span class="n">getWhereClause</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">buildwhere</span> <span class="o">+=</span> <span class="n">getWhereClause</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">op</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+                        <span class="n">where</span> <span class="o">+=</span> <span class="n">buildwhere</span>
+
+            <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s1">&#39;page&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;page&#39;</span><span class="p">]),</span>
+                <span class="s1">&#39;limit&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]),</span>
+                <span class="s1">&#39;sidx&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;sidx&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="s1">&#39;sidx&#39;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s1">&#39;sord&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;sord&#39;</span><span class="p">]</span>
+            <span class="p">}</span>
+
+            <span class="c1"># get count of records</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT COUNT(*) AS count FROM log join users using(user_id)&quot;</span><span class="p">)</span>
+            <span class="n">query</span> <span class="o">+=</span> <span class="n">where</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="p">())</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;count&#39;</span><span class="p">]</span>
+
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;records&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;total&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">count</span> <span class="o">/</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;limit&#39;</span><span class="p">])</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
+            <span class="n">vPage</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;page&#39;</span><span class="p">]</span>
+            <span class="n">vLimit</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;limit&#39;</span><span class="p">]</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;start&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">vPage</span> <span class="o">*</span> <span class="n">vLimit</span><span class="p">)</span> <span class="o">-</span> <span class="n">vLimit</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT log_id, username, description, action, result, detail, &quot;</span>
+                     <span class="s2">&quot;DATE_FORMAT(datetime, &#39;%y-%m-</span><span class="si">%d</span><span class="s2">&#39;) AS datetime FROM log &quot;</span>
+                     <span class="s2">&quot;join users using(user_id)&quot;</span><span class="p">)</span>
+            <span class="n">query</span> <span class="o">+=</span> <span class="n">where</span>
+            <span class="n">query</span> <span class="o">+=</span> <span class="s2">&quot; ORDER BY </span><span class="si">%(sidx)s</span><span class="s2"> </span><span class="si">%(sord)s</span><span class="s2"> LIMIT </span><span class="si">%(start)s</span><span class="s2">, </span><span class="si">%(limit)s</span><span class="s2">&quot;</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">params</span>
+
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># direct call</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT log_id, username, description, action, result, detail, &quot;</span>
+                     <span class="s2">&quot;datetime FROM log join users using(user_id) WHERE 1&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="p">())</span></div></div>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;_search&quot;</span><span class="p">:</span> <span class="s2">&quot;true&quot;</span><span class="p">,</span>
+            <span class="c1"># &#39;searchField&#39;: &#39;&#39;,</span>
+            <span class="c1"># &#39;searchString&#39;: &#39;&#39;,</span>
+            <span class="c1"># &#39;searchOper&#39;: &#39;&#39;,</span>
+            <span class="s1">&#39;filters&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;groupOp&quot;</span><span class="p">:</span> <span class="s2">&quot;AND&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;rules&quot;</span><span class="p">:</span> <span class="p">[{</span>
+                    <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;username&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;eq&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="s2">&quot;user&quot;</span>
+                <span class="p">},</span> <span class="p">{</span>
+                    <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;description&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;op&quot;</span><span class="p">:</span> <span class="s2">&quot;nc&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="s2">&quot;utility&quot;</span>
+                <span class="p">}]</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;rows&quot;</span><span class="p">:</span> <span class="s2">&quot;10&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;page&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sord&quot;</span><span class="p">:</span> <span class="s2">&quot;desc&quot;</span><span class="p">,</span>
+            <span class="s1">&#39;sidx&#39;</span><span class="p">:</span> <span class="s1">&#39;datetime&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;nd&quot;</span><span class="p">:</span> <span class="s2">&quot;1445875128229&quot;</span><span class="p">}</span>
+    <span class="c1"># info = {</span>
+    <span class="c1">#     &#39;function&#39;: &#39;VU&#39;, &#39;username&#39;: &#39;tonym415&#39;, &#39;password&#39;: &#39;password&#39;</span>
+    <span class="c1"># }</span>
+
+    <span class="sd">&quot;&quot;&quot; modify user information for testing &quot;&quot;&quot;</span>
+    <span class="c1"># info[&#39;stuff&#39;] = &quot;stuff&quot;</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="n">Log</span><span class="p">(</span><span class="n">info</span><span class="p">)</span><span class="o">.</span><span class="n">getAllLogs</span><span class="p">())</span>
+    <span class="c1"># print(Log().getAllLogs())</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">ISIB Sphinx PyDocs 1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Tony Moses.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
+    </div>
+  </body>
+</html>
