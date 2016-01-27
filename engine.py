@@ -4,7 +4,7 @@ This script handles all of the processing of the debate site
 @author: Tony Moses
 """
 import cgi
-#from formMockup import formMockup
+from formMockup import formMockup
 import json
 import cgitb
 import os
@@ -362,17 +362,17 @@ def main():
     #                   function="GG",
     #                   counter="2")
 
-    #form = formMockup(
-    #       id="votePoll",
-    #       game_id=7,
-    #       function="GVG",
-    #       counter=1)
+    form = formMockup(
+           id="votePoll",
+           game_id=7,
+           function="GVG",
+           counter=1)
     """ valid user in db (DO NOT CHANGE: modify below)"""
     # form = formMockup(function="SUI", confirm_password="password",
     #                   first_name="Antonio", paypal_account="tonym415",
     #                   password="password", email="tonym415@gmail",
     #                   last_name="Moses", username="tonym415")
-    #doFunc(form)
+    doFunc(form)
 
 if "REQUEST_METHOD" in os.environ:
     FSTOR = cgi.FieldStorage()
