@@ -258,17 +258,26 @@ class User(Entity):
             uid = uid['id']
             # add user_id to current instance
             setattr(self, "user_user_id", uid)
-
-            obj = {'user_id': uid, 'data': 'redmond', 'meta_name': 'theme'}
-            # insert default theme for user
-            query = ("INSERT INTO users_metadata (user_id, meta_name, data) "
-                     " VALUES (%(user_id)s, %(meta_name)s, %(data)s)")
-            self.executeModifyQuery(query, obj)
+            self.setInitMeta()
             returnObj = self.getUserByID()
         except self.db2._connector.IntegrityError as err:
             returnObj['message'] = "Error: {}".format(err)
 
         return returnObj
+
+    def setInitMeta(self, avatar=None):
+        params = self.sanitizeParams()
+        obj = {'user_id': params['user_id'], 'data': 'redmond', 'meta_name': 'theme'}
+        # insert default theme for user
+        query = ("INSERT INTO users_metadata (user_id, meta_name, data) "
+                " VALUES (%(user_id)s, %(meta_name)s, %(data)s)")
+        self.executeModifyQuery(query, obj)
+
+        if avatar:
+            if avatar[0] == 'FB':
+                obj['meta_name'] = "avatar"
+                obj['data'] = "https://graph.facebook.com/{0}/picture?type=normal".format(avatar[1])
+                self.executeModifyQuery(query, obj)
 
     def isValidUser(self, info=None):
         """ determine if user is valid based on username/password """
@@ -374,16 +383,46 @@ class User(Entity):
         return "Success"
 
 
+    def fbMerge(self):
+        pass
+
+
+    def facebookLogin(self):
+        params = self.sanitizeParams()
+        # if user not found...create user
+        query = ("SELECT * FROM alt_auth WHERE auth_id = %(fb_id)s")
+        user = self.executeQuery(query, params,True)
+
+        # add fb id to alt_auth table if not already there
+        if not user:
+            params['username'] = params['email'].split("@")[0]
+            # insert system user
+            query = ("INSERT INTO users (first_name, last_name, username, email) "
+                     " VALUES (%(first_name)s, %(last_name)s, %(username)s, %(email)s)")
+            user = self.executeModifyQuery(query, params)
+            params['user_id'] = user['id']
+            # add meta data for new user
+            setattr(self, "user_user_id", user['id'])
+            setattr(self, "user_username", params['username'])
+            self.setInitMeta(['FB', params['fb_id']])
+            # insert into alternate authorization table
+            query = ("INSERT INTO alt_auth (auth_id, description, user_id) VALUES (%(fb_id)s,'Facebook',%(user_id)s)")
+            self.executeModifyQuery(query, params)
+        else:
+            # set up getUserByID function
+            setattr(self, "user_user_id", user[0]['user_id'])
+            # call function to get user information (username)
+            user = self.getUserByID()
+            # set up getUserCookie function
+            setattr(self, "user_username", user['username'])
+        return self.getUserCookie()
+
+
+
+
 if __name__ == "__main__":
-    info = {}
-    info = {"last_name": "jury",
-            "first_name": "Sam",
-            "email": "sam@gmail",
-            "password": "password",
-            "paypal_account": "sjury",
-            "username": "sam",
-            "function": "SUI",
-            "id": "signup"}
+    info = {"username":"lj14thechampion","first_name":"B'Liahl","last_name":"Detwiler","user_id":72,"fb_id":"905954012853806","id":"fbLogin","email":"lj14thechampion@gmail.com"}
+
     # """ valid user in db (DO NOT CHANGE: modify below)"""
     # info = {"confirm_password": "password", "first_name":
     #         "Antonio", "paypal_account": "tonym415", "password":
@@ -401,5 +440,5 @@ if __name__ == "__main__":
 
     # print(User(info).updateUser())
     u = User(u_info)
-    # print(u.isValidUser())
-    print(u.submitUser())
+    print(u.getUserCookie())
+    # print(u.submitUser())

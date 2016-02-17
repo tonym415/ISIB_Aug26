@@ -6,7 +6,10 @@ def connStr():
     return {
         'user': 'webuser',
         'password': 'webuser',
-        'host': '127.0.0.1',
+        'host': '52.11.91.249',
         'database': 'debate'
     }
 
+if __name__ == "__main__":
+    #pass
+    print(connStr())

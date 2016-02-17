@@ -32,6 +32,6 @@ def get_connection():
 __all__ = ['get_connection']
 
 if __name__ == "__main__":
-    pass
-    # print("type: %s" % type(get_connection()))
+    #pass
+     print("type: %s" % type(get_connection()))
     # print("dir: %s" % dir(get_connection()))

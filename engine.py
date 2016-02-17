@@ -98,6 +98,9 @@ def userFunctions(fs):
             user_info = User(fs).getUserCookie()
         elif fs['id'] == 'tr':
             user_info = User(fs).getUserTrackRecord()
+        elif fs['id'] == 'fbLogin':
+            user_info = User(fs).facebookLogin()
+
     returnJson(user_info)
 
 
@@ -323,7 +326,7 @@ def doFunc(fStor):
         globals()['getCategories']()
     elif funcName in ["GAU"]:
         globals()['getAllUsers'](fStor)
-    elif funcName in ["VU", 'TRU', "GCU"]:
+    elif funcName in ["VU", 'TRU', "GCU"] or funcName == 'userFunctions':
         globals()['userFunctions'](fStor)
     elif funcName in ["SUI", "UU"]:
         globals()['submitUserInfo'](fStor)
