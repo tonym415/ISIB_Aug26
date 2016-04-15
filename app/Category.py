@@ -107,4 +107,4 @@ if __name__ == "__main__":
     """ modify user information for testing """
     # info['stuff'] = "stuff"
 
-    print(Category(info).updateCategory())
+    print(Category(info).getAllCategories())

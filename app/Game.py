@@ -69,19 +69,6 @@ class Game(Entity):
 
         return returnDict
 
-    # def getPlayerQueue(self):
-    #     """ get all user in queue ready for game """
-    #     query = ("SELECT queue_id, user_id, game_queue.category_id, game_queue.question_id, "
-    #              "game_queue.wager_id, game_queue.time_id, active FROM "
-    #              "game_queue JOIN  (SELECT category_id, question_id, wager_id, time_id FROM "
-    #              "game_queue WHERE active = 1 GROUP BY category_id, question_id, wager_id, "
-    #              "time_id HAVING count(*) >= 3) AS sub ON "
-    #              "(game_queue.category_id=sub.category_id) AND "
-    #              "(game_queue.question_id=sub.question_id) AND "
-    #              "(game_queue.wager_id=sub.wager_id) "
-    #              "AND(game_queue.time_id=sub.time_id)")
-    #     return self.executeQuery(query, (), True)
-
     def getQueuedUsers(self):
         """ get available user in queue """
         returnObj = {}
