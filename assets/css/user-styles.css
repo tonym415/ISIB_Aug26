@@ -514,6 +514,11 @@ img {
     width: 50%;
     border: none !important;
 }
+
+#paramOptions {
+    width: inherit;
+}
+
 #paramOptions ul, #tabs ul{
     border: none !important;
     background: none !important;
@@ -780,3 +785,10 @@ header[role=banner]::after {
     width: 95%;
     padding-top: 3em;
 }
+
+
+/*  TODO - for merge resolution (ON HOLD)
+ * .mergeWarning {*/
+     /*margin: auto;*/
+     /*width: 40%;*/
+/*}*/
