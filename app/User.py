@@ -21,24 +21,23 @@ class User(Entity):
     _context = [__name__ == "__main__"]
 
     def __init__(self, *userInfo, **kwargs):
-        """
-        initalize User object
-        """
+        """ initalize User object """
         super(User, self).__init__()
-        # self._cnx = lib.db2.get_connection()
-        # self.cursor = self._cnx.cursor(buffered=True, dictionary=True)
         for dictionary in userInfo:
             for key in dictionary:
-                # print('Key: %s' % key)
+                # add prefix to differentiate vars in class dictionary
                 setattr(self, "user_" + key, dictionary[key])
 
         for key in kwargs:
             setattr(self, key, kwargs[key])
 
     def sanitizeParams(self):
-        return {k[5:]: v
+        params = {k[5:]: v
                 for k, v in self.__dict__.items()
-                if k.startswith('user')}
+                if k.startswith('user_')}
+
+        self.log("Params:" + str(params) + "\n\n")
+        return params
 
     def getAllUsers(self):
         """ get user information by name """
@@ -148,10 +147,14 @@ class User(Entity):
                  "meta_name = 'theme'")
 
         retDict = self.executeQuery(query, params)[0]
+        self.log("Statement: " + str(self.cursor.statement))
         # get metadata along with basic data
         query = ("SELECT meta_name, data FROM users_metadata WHERE user_id = "
                  "%(user_id)s AND meta_name IN ('avatar','theme')")
         metaList = self.executeQuery(query, retDict)
+        self.log(str(metaList))
+        self.log("Statement: " + str(self.cursor.statement))
+        self.log("Rows: " + str(self.cursor.rowcount))
         for rec in metaList:
             retDict[rec['meta_name']] = rec['data']
 
@@ -168,7 +171,9 @@ class User(Entity):
                  "WHERE u.active = 1 AND u.username = %(username)s AND "
                  "meta_name = 'theme'")
 
-        retDict = self.executeQuery(query, params)[0]
+        retDict = self.executeQuery(query, params)
+        # sys.stderr.write(self.cursor.statement)
+        # retDict = self.executeQuery(query, params)[0]
         if meta:
             # get metadata along with basic data
             query = ("SELECT meta_name, data FROM users_metadata "
@@ -191,13 +196,16 @@ class User(Entity):
                  "meta_name = 'theme'")
 
         retDict = self.executeQuery(query, params)[0]
+        # self.log("Return Dict: %s\n" % (str(retDict)))
         if meta:
             # get metadata along with basic data
             query = ("SELECT meta_name, data FROM users_metadata "
                      "WHERE user_id = %(user_id)s")
             metaList = self.executeQuery(query, params)
+            self.log("Meta Dict: %s\n" % (str(metaList)))
             for rec in metaList:
-                retDict[rec['meta_name']] = rec['data']
+                # self.log("Rec in Dict: %s\n" % (str(rec)))
+                retDict[rec["meta_name"]] = rec["data"]
 
         return retDict
 
@@ -281,18 +289,27 @@ class User(Entity):
 
     def isValidUser(self, info=None):
         """ determine if user is valid based on username/password """
+        validUser = False
         # userInfo should be provided by calling function
         if info:
             userInfo = info
         else:
-            userInfo = self.getUserByName()
+            userInfo = self.getUserByName()[0]
 
+        self.log("UInfo:" + str(userInfo) + "\n")
         if 'error' in userInfo:
             validUser = False
+        elif userInfo['password'] == "None":
+            # check alternate credentials
+            self.log("User SM Login\n")
         else:
-            # test given password against database password
-            hashed_pw = userInfo['password']
-            validUser = pbkdf2_sha256.verify(self.user_password, hashed_pw)
+            try:
+                # test given password against database password
+                hashed_pw = userInfo['password']
+                validUser = pbkdf2_sha256.verify(self.user_password, hashed_pw)
+            except Exception as e:
+                # if password don't jive user return false value for validUser
+                pass
 
         return validUser
 
@@ -383,62 +400,92 @@ class User(Entity):
         return "Success"
 
 
+    def resolveUserAccounts(self):
+        params = self.sanitizeParams()
+        query = ("SELECT username, first_name, last_name, user_id, created FROM users WHERE email IN (SELECT email FROM users WHERE user_id = %(user_id)s)")
+        users = self.executeQuery(query, params,True)
+
+        return users
+
     def fbMerge(self):
         pass
 
-
     def facebookLogin(self):
         params = self.sanitizeParams()
-        # if user not found...create user
+        # get current user info from alt_auth table
         query = ("SELECT * FROM alt_auth WHERE auth_id = %(fb_id)s")
         user = self.executeQuery(query, params,True)
 
-        # add fb id to alt_auth table if not already there
         if not user:
+            # if user not found...create user
             params['username'] = params['email'].split("@")[0]
+
+            # check system for duplicates for possible merge of existing accounts
+            query = ("SELECT * FROM users WHERE username = %(username)s AND password IS NOT NULL")
+            duplicates = self.executeQuery(query, params,True)
+            self.log("Dups: %s" % duplicates)
+
+            # if there are duplicate usernames...set merged value to 0
+            # as in "no the accounts have not been merged"
+            params['merged'] = (-1, 0)[duplicates]
+
             # insert system user
-            query = ("INSERT INTO users (first_name, last_name, username, email) "
-                     " VALUES (%(first_name)s, %(last_name)s, %(username)s, %(email)s)")
+            query = ("INSERT INTO users (first_name, last_name, username, email, merged) "
+                     " VALUES (%(first_name)s, %(last_name)s, %(username)s, %(email)s, %(merged)s)")
             user = self.executeModifyQuery(query, params)
             params['user_id'] = user['id']
+
             # add meta data for new user
             setattr(self, "user_user_id", user['id'])
             setattr(self, "user_username", params['username'])
             self.setInitMeta(['FB', params['fb_id']])
+
             # insert into alternate authorization table
             query = ("INSERT INTO alt_auth (auth_id, description, user_id) VALUES (%(fb_id)s,'Facebook',%(user_id)s)")
             self.executeModifyQuery(query, params)
         else:
+            self.log("USER: %s\n" % str(user))
             # set up getUserByID function
             setattr(self, "user_user_id", user[0]['user_id'])
             # call function to get user information (username)
-            user = self.getUserByID()
+            user = self.getUserByID(True)
             # set up getUserCookie function
             setattr(self, "user_username", user['username'])
-        return self.getUserCookie()
+        return self.returnAlternateLoginInfo(self.getUserCookie())
 
+    def returnAlternateLoginInfo(self, cookieInfo):
+        """ Add merge info to cookie data"""
+        query = ("SELECT merged FROM alt_auth WHERE user_id = %(user_id)s")
+        user = self.executeQuery(query, cookieInfo[0],True)
 
-
+        # if query retuns info add data
+        if user:
+            cookieInfo[0]["merged"] = user[0]["merged"]
+        return cookieInfo
 
 if __name__ == "__main__":
-    info = {"username":"lj14thechampion","first_name":"B'Liahl","last_name":"Detwiler","user_id":72,"fb_id":"905954012853806","id":"fbLogin","email":"lj14thechampion@gmail.com"}
-
+    # info = {"username":"lj14thechampion","first_name":"B'Liahl","last_name":"Detwiler","user_id":72,"fb_id":"905954012853806","id":"fbLogin","email":"lj14thechampion@gmail.com"}
+    info = {"email":"tonym415@gmail.com",
+            "first_name":"Antonio",
+            "last_name":"Moses",
+            "id":"fbLogin",
+            "fb_id":10207047199316309,
+            "username": "tonym415",
+            "function":"userFunctions"
+            }
+    # info = {"username": 'user',
+            # "user_id": 49,
+            # "password": 'password'}
     # """ valid user in db (DO NOT CHANGE: modify below)"""
     # info = {"confirm_password": "password", "first_name":
     #         "Antonio", "paypal_account": "tonym415", "password":
     #         "password", "email": "tonym415@gmail.com", "last_name":
     #         "Moses", "username": "tonym415"}
 
-    """ modify user information for testing """
-    # info['username'] = "user"
-    # info['password'] = "password"
-
-    """ remove  from data dict """
+    """ remove "user_" prefix from data dict """
     u_info = {i: info[i]
               for i in info if i != 'function' and '_password' not in i}
     # print(info)
 
-    # print(User(info).updateUser())
-    u = User(u_info)
-    print(u.getUserCookie())
-    # print(u.submitUser())
+    print(User(u_info).facebookLogin())
+    # print(User(u_info).getUserByID())

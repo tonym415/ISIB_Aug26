@@ -86,7 +86,7 @@ def submitUserInfo(fs):
 
 
 def userFunctions(fs):
-    """ test function for class functionality (not needed for production) """
+    """ dissemenates data/function calls for User(player) interactions """
     user_info = {}
     if "id" in fs:
         if fs['id'] == 'login':
@@ -99,8 +99,10 @@ def userFunctions(fs):
         elif fs['id'] == 'tr':
             user_info = User(fs).getUserTrackRecord()
         elif fs['id'] == 'fbLogin':
+            """ returns User(fs).getUserCookie() """
             user_info = User(fs).facebookLogin()
-
+        elif fs['id'] == 'resolveUserAccounts':
+            user_info = User(fs).resolveUserAccounts()
     returnJson(user_info)
 
 
