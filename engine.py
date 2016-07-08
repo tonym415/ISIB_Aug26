@@ -21,7 +21,7 @@ from app.Category import *
 from app.Question import *
 from app.Game import *
 from app.Feedback import *
-
+from app.IPN import *
 
 cgitb.enable()
 
@@ -208,6 +208,9 @@ def modifyQuestion(fs):
         q = Question(fs).newQuestion()
 
     returnJson(q)
+    
+def IPN(fstor):
+    Root.index(fstor)
 
 
 def getCategoryQuestionsByID(fs):
@@ -318,6 +321,8 @@ def doFunc(fStor):
 
     if funcName in ["CQ", "EQ", "DQ"]:
         globals()['modifyQuestion'](fStor)
+    elif os.environ["HTTP_USER_AGENT"].startswith("PayPal IPN"):
+        globals()["IPN"](fstor)
     elif funcName in ["CC", "RC", "DC", "AC"]:
         globals()['modifyCategory'](fStor)
     elif funcName in ["GQ"]:

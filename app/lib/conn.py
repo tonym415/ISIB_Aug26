@@ -6,7 +6,7 @@ def connStr():
     return {
         'user': 'webuser',
         'password': 'webuser',
-        'host': '52.11.91.249',
+        'host': '54.175.67.82',
         'database': 'debate'
     }
 
