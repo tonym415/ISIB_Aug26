@@ -5,6 +5,7 @@ The Entity base class is used to handle all functions related to the db manipula
 import os
 import sys
 import json
+from inspect import currentframe, getframeinfo
 sys.path.append(os.path.realpath(os.path.dirname(__file__)))
 import db2
 
@@ -39,8 +40,8 @@ class Entity(object):
             self.cursor.execute(query, params)
             rowcount = self.cursor.rowcount
             statement = self.cursor.statement
-            # sys.stderr.write("\nResult Count: %d\nResult Statement: %s\n" % (rowcount, statement))
-            # sys.stderr.write("Cursor status: %s" % (self.cursor.__dict__))
+            self.log("Result Count: %d\nResult Statement: %s" % (rowcount, statement))
+            # self.log("Cursor status: %s" % (self.cursor.__dict__))
             if rowcount > 0:
                 # stringifyData called to get convert unicode resultset
                 returnDict = self.stringifyData(self.cursor.fetchall())
@@ -57,7 +58,7 @@ class Entity(object):
 
     def stringifyData(self, data):
         #convert unicode resultset to string
-        sys.stderr.write("\nOrig Data: %s\n" % (data))
+        self.log("Orig Data: %s" % (data))
         newdata = []
         for d in data: # outer list
             newdict = {}
@@ -67,7 +68,7 @@ class Entity(object):
                 newdict[k] = v
             newdata.append(newdict)
 
-        sys.stderr.write("\n\nNew Data: %s\n\n" % (newdata))
+        self.log("New Data: %s" % (newdata))
         return newdata
 
     def getColNames(self, tableName):
@@ -87,6 +88,13 @@ class Entity(object):
                 maxnamesize = namesize
 
         return columns
+
+    def log(self, string):
+        # get calling function's info
+        cf = currentframe().f_back
+        lineNum = cf.f_lineno
+        filename = getframeinfo(cf).filename
+        sys.stderr.write(str(string) + "\t(File: %s Line: %s)\n\n" % (filename,lineNum))
 
 if __name__ == "__main__":
     query = "SELECT  u.user_id, first_name, username, role, password, last_name, email, credit, wins, losses, paypal_account, u.created, active FROM users u LEFT JOIN roles r USING(role_id) LEFT JOIN users_metadata m ON u.user_id=m.user_id WHERE u.active = 1 AND u.username = 'user' AND meta_name = 'theme'"
