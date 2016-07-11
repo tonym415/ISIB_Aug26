@@ -323,8 +323,9 @@ def doFunc(fStor):
 
     if funcName in ["CQ", "EQ", "DQ"]:
         globals()['modifyQuestion'](fStor)
-    elif os.environ["HTTP_USER_AGENT"].startswith("PayPal IPN"):
-        globals()["IPN"](fstor)
+    elif "HTTP_USER_AGENT" in os.environ:
+        if os.environ["HTTP_USER_AGENT"].startswith("PayPal IPN"):
+            globals()["IPN"](fstor)
     elif funcName in ["CC", "RC", "DC", "AC"]:
         globals()['modifyCategory'](fStor)
     elif funcName in ["GQ"]:
