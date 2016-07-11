@@ -21,7 +21,7 @@ from app.Category import *
 from app.Question import *
 from app.Game import *
 from app.Feedback import *
-from app.IPN import *
+# from app.IPN import *
 
 cgitb.enable()
 
@@ -210,7 +210,7 @@ def modifyQuestion(fs):
         q = Question(fs).newQuestion()
 
     returnJson(q)
-    
+
 def IPN(fstor):
     Root.index(fstor)
 
