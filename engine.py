@@ -87,11 +87,15 @@ def submitUserInfo(fs):
 
 def userFunctions(fs):
     """ dissemenates data/function calls for User(player) interactions """
+    sys.stderr.write("In userFunctions")
     user_info = {}
     if "id" in fs:
+        sys.stderr.write("ID found: %s" % fs['id'])
         if fs['id'] == 'login':
             """ create a json object noting user_info """
+            sys.stderr.write("Send to isValidUser: %s" % fs)
             valid_user = User(fs).isValidUser()
+            sys.stderr.write("VALID: %s" % valid_user)
             if valid_user:
                 user_info = User(fs).getUserCookie()
         elif fs['id'] == 'profile':
@@ -321,11 +325,13 @@ def doFunc(fStor):
     unused_members = ['function', '_password']
     fStor = {i: fStor[i] for i in fStor if i not in unused_members}
 
-    if funcName in ["CQ", "EQ", "DQ"]:
-        globals()['modifyQuestion'](fStor)
-    elif "HTTP_USER_AGENT" in os.environ:
+    # handle Paypal call
+    if "HTTP_USER_AGENT" in os.environ:
         if os.environ["HTTP_USER_AGENT"].startswith("PayPal IPN"):
             globals()["IPN"](fstor)
+
+    if funcName in ["CQ", "EQ", "DQ"]:
+        globals()['modifyQuestion'](fStor)
     elif funcName in ["CC", "RC", "DC", "AC"]:
         globals()['modifyCategory'](fStor)
     elif funcName in ["GQ"]:
@@ -335,6 +341,7 @@ def doFunc(fStor):
     elif funcName in ["GAU"]:
         globals()['getAllUsers'](fStor)
     elif funcName in ["VU", 'TRU', "GCU"] or funcName == 'userFunctions':
+        sys.stderr.write("Calling userFunctions")
         globals()['userFunctions'](fStor)
     elif funcName in ["SUI", "UU"]:
         globals()['submitUserInfo'](fStor)
@@ -364,20 +371,16 @@ def cgiFieldStorageToDict(fieldstorage):
 
 def main():
     """ Self test this module using hardcoded data """
-    # form = formMockup(id="gameParameters",
-    #                   p_paramCategory="1",
-    #                   paramQuestions="8",
-    #                   timeLimit="2",
-    #                   wager="1",
-    #                   user_id="36",
-    #                   function="GG",
-    #                   counter="2")
+    form = formMockup(function="VU",
+                    id="login",
+                      username="user",
+                      password="password")
 
-    form = formMockup(
-           id="votePoll",
-           game_id=7,
-           function="GVG",
-           counter=1)
+    # form = formMockup(
+           # id="votePoll",
+           # game_id=7,
+           # function="GVG",
+           # counter=1)
     """ valid user in db (DO NOT CHANGE: modify below)"""
     # form = formMockup(function="SUI", confirm_password="password",
     #                   first_name="Antonio", paypal_account="tonym415",
@@ -387,8 +390,10 @@ def main():
 
 if "REQUEST_METHOD" in os.environ:
     FSTOR = cgi.FieldStorage()
+    sys.stderr.write("FSTOR: %s" % FSTOR)
     if 'function' in FSTOR.keys():
         # run function depending on given values
         doFunc(FSTOR)
 else:
+    sys.stderr.write("Enter Main")
     main()

@@ -473,6 +473,7 @@ if __name__ == "__main__":
             "username": "tonym415",
             "function":"userFunctions"
             }
+    info = {'username': 'user', 'password': 'password', 'id': 'login'}
     # info = {"username": 'user',
             # "user_id": 49,
             # "password": 'password'}
@@ -487,5 +488,6 @@ if __name__ == "__main__":
               for i in info if i != 'function' and '_password' not in i}
     # print(info)
 
-    print(User(u_info).facebookLogin())
+    print(User(u_info).isValidUser())
+    # print(User(u_info).facebookLogin())
     # print(User(u_info).getUserByID())

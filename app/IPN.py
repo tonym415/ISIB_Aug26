@@ -32,9 +32,8 @@ insert commands from Entity to insert data into and update the database
 
 
 class Root(Controller):
-    # if the app will not be served at the root of the domain, uncomment the next line
-    channel = "/ipn"
-
+	# if the app will not be served at the root of the domain, uncomment the next line
+	channel = "/ipn"
     def verify_ipn(data):
         # prepares provided data set to inform PayPal we wish to validate the response
         data["cmd"] = "_notify-validate"
@@ -62,46 +61,45 @@ class Root(Controller):
         # otherwise...
         return True
 
-    # if the app will not be served at the root of the domain, uncomment the next line
-    channel = "/ipn"
+	# if the app will not be served at the root of the domain, uncomment the next line
+	channel = "/ipn"
 
-    # index is invoked on the root path, or the designated channel URI
-    def index(self, **data):
-        # If there is no txn_id in the received arguments don't proceed
-        if not "txn_id" in data:
-            return "No Parameters"
+	# index is invoked on the root path, or the designated channel URI
+	def index(self, **data):
+		# If there is no txn_id in the received arguments don't proceed
+		if not "txn_id" in data:
+			return "No Parameters"
 
-        # Verify the data received with Paypal
-        if not verify_ipn(data):
-            return "Unable to Verify"
+		# Verify the data received with Paypal
+		if not verify_ipn(data):
+			return "Unable to Verify"
 
-        # Suggested Check : check the item IDs and Prices to make sure they match with records
+		# Suggested Check : check the item IDs and Prices to make sure they match with records
 
-        # If verified, store desired information about the transaction
-        userid = data["json_decode($data['custom'])->user_id"]  #here is where I decode the json IPN user_id variable that they send back to us. This allows us to uniquely match users to their payments.
-        status = data["payment_status"]
-        purchase = float(data["mc_gross"])  #I converted these to float so we can subtract it to find the amount of credits to assign to the player
-        paypalfee = float(data["mc_fee"])
-        credits = purchase - paypalfee
+		# If verified, store desired information about the transaction
+		userid = data["json_decode($data['custom'])->user_id"]  #here is where I decode the json IPN user_id variable that they send back to us. This allows us to uniquely match users to their payments.
+		status = data["payment_status"]
+		purchase = float(data["mc_gross"])  #I converted these to float so we can subtract it to find the amount of credits to assign to the player
+		paypalfee = float(data["mc_fee"])
+		credits = purchase - paypalfee
 
-        # Open a connection to a local SQLite database (use MySQLdb for MySQL, psycopg or PyGreSQL for PostgreSQL)
-        conn = connect('debate')
-        curs = conn.cursor()
-        try:
-            pass
-            # curs.execute("""UPDATE Users
-                    # SET Credit = Credit + %s
+		# Open a connection to a local SQLite database (use MySQLdb for MySQL, psycopg or PyGreSQL for PostgreSQL)
+		conn = connect('debate')
+		curs = conn.cursor()
+		try:
+			# curs.execute("""UPDATE Users
+	                # SET Credit = Credit + %s
                     # WHERE user_id= %s""", (credits, userid))
-            # conn.commit()
-        except sqerr, e:
-            return "SQL Error: " + e.args[0]
-        conn.close()
+			# conn.commit()
+		except sqerr, e:
+			return "SQL Error: " + e.args[0]
+		conn.close()
 
-        # Alternatively you can generate license keys, email users login information
-        # or setup accounts upon successful payment. The status will always be "Completed" on success.
-        # Likewise you can revoke user access, if status is "Canceled", or another payment error.
+		# Alternatively you can generate license keys, email users login information
+		# or setup accounts upon successful payment. The status will always be "Completed" on success.
+		# Likewise you can revoke user access, if status is "Canceled", or another payment error.
 
-        return "Success"
+		return "Success"
 
-        ##########References: http://stackoverflow.com/questions/1307378/python-mysql-update-statement
-                ###############: http://code.tutsplus.com/tutorials/how-to-setup-recurring-payments--net-30168
+		##########References: http://stackoverflow.com/questions/1307378/python-mysql-update-statement
+		     ###############: http://code.tutsplus.com/tutorials/how-to-setup-recurring-payments--net-30168
