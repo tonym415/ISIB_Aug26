@@ -15,7 +15,7 @@
 * @namespace appLib
 * @returns {Object} Returns library of config vars and functions
 */
-define(['jquery','tooltipster'], function($) {
+define(['jquery','tooltipster','validate'], function($) {
 
     // validator selectmenu method
     $.validator.addMethod("selectNotEqual", function(value, element, param) {

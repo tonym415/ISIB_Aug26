@@ -27,7 +27,7 @@
         <select id='temp_subCategory' name='temp_subCategory' >
             <option value="">None</option>
         </select>
-        <label for='temp_CategoryChk' class='subCheck'>Sub?</label>
+        <label for='temp_CategoryChk' class='subCheck'>Sub?</label>u
         <input id='temp_CategoryChk' type='checkbox' class='subCheck'/>
         <div class="clear"></div>
         <span errorfor="temp_subCategory"></span>
@@ -43,7 +43,9 @@
             </ul>
 
             <div id="login-tab"> <!-- log in form -->
-                <div class="center-content loginButtonWrapper">
+                <div class="center-content"> <!-- loginButtonWrapper"-->
+                    <img id='fbButtonImage' src="#">
+                <!--<div class="fb-login-button btnLogin" data-max-rows="2" data-scope="public_profile,email,user_friends" data-size="large" data-auto-logout-link="true"></div>-->
                 </div>
                 <div class="groupSeparatorWrapper">
                     <div class="groupSeparator"> <p>or</p> </div>
@@ -136,4 +138,31 @@
             <p></p>
         </div>
     </div>
-    
+
+<!-- Account Merger template -->
+<div class="modal fade" id="merger" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+                <h4 class="modal-title">Account Merger Resolution</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    You are logged in as: <p id='current'> </p>
+                </p>
+                <hr />
+                <p>
+                    Is this also your account: 
+                    <div id='suggested' class='panel-group'> 
+                    </div>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="confirmMerge">Yep, It's me</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Not Me</button>
+            </div>
+        </div>
+    </div>
+</div>

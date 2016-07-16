@@ -43,8 +43,8 @@ requirejs.config({
         tooltipster: 'plugins/jquery.tooltipster',
         upload: 'plugins/jquery.fileupload',
         bootstrap : [
-            // '//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min',
-            'plugins/bootstrap'
+             '//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min',
+            //'plugins/bootstrap'
         ],
         fileInput : 'plugins/fileinput.min',
         jqGrid: [
@@ -52,7 +52,9 @@ requirejs.config({
             'plugins/grid.locale-en'
             ],
         jqGridSrc: [//'//cdnjs.cloudflare.com/ajax/pluginss/jqgrid/4.6.0/js/jquery.jqGrid.src',
-            'plugins/jquery.jqgrid.src']
+            'plugins/jquery.jqgrid.src'],
+        facebook: '//connect.facebook.net/en_US/all',
+        ud_facebook: 'plugins/fb'  // user defined Facebook functions
     },
     shim: {
         jquery: {
@@ -80,9 +82,16 @@ requirejs.config({
         },
         bootstrap: {
             deps: ['jquery']
-        }
-        // additional_methods: {
-        //  deps:['validate']
-        // }
+        },
+        facebook: {
+            exports: 'FB'
+        },
+        ud_facebook: {
+            deps: ['facebook'],
+            exports: 'udFB'
+        },
+         additional_methods: {
+          deps:['validate']
+         }
     }
 });
