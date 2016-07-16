@@ -1,0 +1,400 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>app.Game &mdash; ISIB Sphinx PyDocs 1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/sidebar.js"></script>
+    <link rel="top" title="ISIB Sphinx PyDocs 1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">ISIB Sphinx PyDocs 1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for app.Game</h1><div class="highlight"><pre>
+<span class="ch">#!C:\Python34\python.exe</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The User class is used to handle all functions related to the User</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)))</span>
+
+<span class="kn">from</span> <span class="nn">lib.Entity</span> <span class="kn">import</span> <span class="n">Entity</span>
+
+
+<div class="viewcode-block" id="Game"><a class="viewcode-back" href="../../rstFiles/app.Game.html#app.Game.Game">[docs]</a><span class="k">class</span> <span class="nc">Game</span><span class="p">(</span><span class="n">Entity</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot; for category&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; initalize User object &quot;&quot;&quot;</span>
+    <span class="n">_context</span> <span class="o">=</span> <span class="p">[</span><span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">userInfo</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Game</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">dictionary</span> <span class="ow">in</span> <span class="n">userInfo</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">dictionary</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;user_&quot;</span> <span class="o">+</span> <span class="n">key</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+<div class="viewcode-block" id="Game.sanitizeParams"><a class="viewcode-back" href="../../rstFiles/app.Game.html#app.Game.Game.sanitizeParams">[docs]</a>    <span class="k">def</span> <span class="nf">sanitizeParams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">[</span><span class="mi">5</span><span class="p">:]:</span> <span class="n">v</span>
+                  <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                  <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">)}</span>
+
+        <span class="k">if</span> <span class="s2">&quot;p_paramCategory&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;category_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;category_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;p_paramCategory&quot;</span><span class="p">]</span>
+            <span class="n">params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;p_paramCategory&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;p_subCategory&quot;</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;category_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;p_subCategory&quot;</span><span class="p">]</span>
+            <span class="n">params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;p_subCategory&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;paramQuestions&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;paramQuestions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="s2">&quot;wager&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;wager&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="s2">&quot;timeLimit&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">params</span><span class="p">:</span>
+            <span class="n">params</span><span class="p">[</span><span class="s1">&#39;timeLimit&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">return</span> <span class="n">params</span></div>
+
+<div class="viewcode-block" id="Game.removeFromQueue"><a class="viewcode-back" href="../../rstFiles/app.Game.html#app.Game.Game.removeFromQueue">[docs]</a>    <span class="k">def</span> <span class="nf">removeFromQueue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; add user params to queue&quot;&quot;&quot;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;UPDATE game_queue SET active = 0 WHERE queue_id = </span><span class="si">%(queue_id)s</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeModifyQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Game.addToQueue"><a class="viewcode-back" href="../../rstFiles/app.Game.html#app.Game.Game.addToQueue">[docs]</a>    <span class="k">def</span> <span class="nf">addToQueue</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; add user params to queue&quot;&quot;&quot;</span>
+        <span class="n">returnDict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># load params</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;INSERT INTO game_queue (user_id, category_id, question_id, wager_id, &quot;</span>
+                     <span class="s2">&quot;time_id) VALUES (</span><span class="si">%(user_id)s</span><span class="s2">, </span><span class="si">%(category_id)s</span><span class="s2">, </span><span class="si">%(paramQuestions)s</span><span class="s2">, </span><span class="si">%(wager)s</span><span class="s2">, &quot;</span>
+                     <span class="s2">&quot;</span><span class="si">%(timeLimit)s</span><span class="s2">)&quot;</span><span class="p">)</span>
+            <span class="n">returnVal</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeModifyQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT * FROM game_queue WHERE queue_id = </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">returnDict</span><span class="p">[</span><span class="s1">&#39;queue&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">lastrowid</span><span class="p">,))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">returnDict</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+            <span class="n">returnDict</span><span class="p">[</span><span class="s1">&#39;stm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">statement</span>
+
+        <span class="k">return</span> <span class="n">returnDict</span></div>
+
+    <span class="c1"># def getPlayerQueue(self):</span>
+    <span class="c1">#     &quot;&quot;&quot; get all user in queue ready for game &quot;&quot;&quot;</span>
+    <span class="c1">#     query = (&quot;SELECT queue_id, user_id, game_queue.category_id, game_queue.question_id, &quot;</span>
+    <span class="c1">#              &quot;game_queue.wager_id, game_queue.time_id, active FROM &quot;</span>
+    <span class="c1">#              &quot;game_queue JOIN  (SELECT category_id, question_id, wager_id, time_id FROM &quot;</span>
+    <span class="c1">#              &quot;game_queue WHERE active = 1 GROUP BY category_id, question_id, wager_id, &quot;</span>
+    <span class="c1">#              &quot;time_id HAVING count(*) &gt;= 3) AS sub ON &quot;</span>
+    <span class="c1">#              &quot;(game_queue.category_id=sub.category_id) AND &quot;</span>
+    <span class="c1">#              &quot;(game_queue.question_id=sub.question_id) AND &quot;</span>
+    <span class="c1">#              &quot;(game_queue.wager_id=sub.wager_id) &quot;</span>
+    <span class="c1">#              &quot;AND(game_queue.time_id=sub.time_id)&quot;)</span>
+    <span class="c1">#     return self.executeQuery(query, (), True)</span>
+
+<div class="viewcode-block" id="Game.getQueuedUsers"><a class="viewcode-back" href="../../rstFiles/app.Game.html#app.Game.Game.getQueuedUsers">[docs]</a>    <span class="k">def</span> <span class="nf">getQueuedUsers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; get available user in queue &quot;&quot;&quot;</span>
+        <span class="n">returnObj</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT queue_id, game_id, user_id FROM game_queue WHERE &quot;</span>
+                 <span class="s2">&quot;question_id= </span><span class="si">%(paramQuestions)s</span><span class="s2"> and wager_id = </span><span class="si">%(wager)s</span><span class="s2"> &quot;</span>
+                 <span class="s2">&quot;and time_id = </span><span class="si">%(timeLimit)s</span><span class="s2"> and category_id = </span><span class="si">%(category_id)s</span><span class="s2"> &quot;</span>
+                 <span class="s2">&quot;and active = 1 limit 0, 3&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Game.getGameID"><a class="viewcode-back" href="../../rstFiles/app.Game.html#app.Game.Game.getGameID">[docs]</a>    <span class="k">def</span> <span class="nf">getGameID</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; get next game_id &quot;&quot;&quot;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT COALESCE(MAX(game_id), 0) + 1 as game_id FROM game WHERE 1&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="p">())[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;game_id&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Game.submitVote"><a class="viewcode-back" href="../../rstFiles/app.Game.html#app.Game.Game.submitVote">[docs]</a>    <span class="k">def</span> <span class="nf">submitVote</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;UPDATE game SET hasVoted = 1 WHERE &quot;</span>
+                 <span class="s2">&quot;user_id = </span><span class="si">%(user_id)s</span><span class="s2"> and game_id = </span><span class="si">%(game_id)s</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executeModifyQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;UPDATE game SET votes = votes + 1 WHERE &quot;</span>
+                 <span class="s2">&quot;user_id = </span><span class="si">%(vote_id)s</span><span class="s2"> and game_id = </span><span class="si">%(game_id)s</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executeModifyQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Success&quot;</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="Game.getVotes"><a class="viewcode-back" href="../../rstFiles/app.Game.html#app.Game.Game.getVotes">[docs]</a>    <span class="k">def</span> <span class="nf">getVotes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+        <span class="n">playerVotes</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># get all comments for the game</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT u.user_id, username, votes, credit_value  as wager FROM game &quot;</span>
+                <span class="s2">&quot;INNER JOIN users u USING(user_id) INNER JOIN game_queue &quot;</span>
+                <span class="s2">&quot;USING(game_id) JOIN credit_options ON (wager_id=credit_id) &quot;</span>
+                <span class="s2">&quot;WHERE game_id = </span><span class="si">%(game_id)s</span><span class="s2"> AND hasVoted = 1 LIMIT 0,3&quot;</span><span class="p">)</span>
+        <span class="n">playerVotes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+        <span class="c1"># get user avatars</span>
+        <span class="k">for</span> <span class="n">uinfo</span> <span class="ow">in</span> <span class="n">playerVotes</span><span class="p">:</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;SELECT data FROM users_metadata WHERE meta_name = &#39;avatar&#39; &quot;</span>
+                <span class="s2">&quot;AND user_id = </span><span class="si">%(user_id)s</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">uinfo</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">uinfo</span><span class="p">[</span><span class="s1">&#39;avatar&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">uinfo</span><span class="p">[</span><span class="s1">&#39;avatar&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">playerVotes</span></div>
+
+<div class="viewcode-block" id="Game.getCategory"><a class="viewcode-back" href="../../rstFiles/app.Game.html#app.Game.Game.getCategory">[docs]</a>    <span class="k">def</span> <span class="nf">getCategory</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; get random question  &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+        <span class="n">stmWhere</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+        <span class="c1"># if a category is available choose question from category pool</span>
+        <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;category_id&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">stmWhere</span> <span class="o">=</span> <span class="s2">&quot; q.category_id = </span><span class="si">%(category_id)s</span><span class="s2"> AND &quot;</span>
+
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT question_id, q.category_id, question_text as text &quot;</span>
+                 <span class="s2">&quot;from questions q INNER JOIN question_categories qc &quot;</span>
+                 <span class="s2">&quot;USING(category_id) WHERE </span><span class="si">%s</span><span class="s2"> q.active = 1 ORDER BY RAND() LIMIT 1&quot;</span><span class="p">)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">query</span> <span class="o">%</span> <span class="n">stmWhere</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="bp">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Game.getWager"><a class="viewcode-back" href="../../rstFiles/app.Game.html#app.Game.Game.getWager">[docs]</a>    <span class="k">def</span> <span class="nf">getWager</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; get random question  &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+        <span class="n">stmWhere</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+        <span class="c1"># if a category is available choose question from category pool</span>
+        <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;wager&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">stmWhere</span> <span class="o">=</span> <span class="s2">&quot; credit_id = </span><span class="si">%(wager)s</span><span class="s2"> AND &quot;</span>
+
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT credit_id, credit_value FROM credit_options &quot;</span>
+                 <span class="s2">&quot;WHERE </span><span class="si">%s</span><span class="s2"> active = 1 ORDER BY RAND() LIMIT 1&quot;</span><span class="p">)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">query</span> <span class="o">%</span> <span class="n">stmWhere</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="bp">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Game.getTimeLimit"><a class="viewcode-back" href="../../rstFiles/app.Game.html#app.Game.Game.getTimeLimit">[docs]</a>    <span class="k">def</span> <span class="nf">getTimeLimit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; get random question  &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+        <span class="n">stmWhere</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+        <span class="c1"># if a category is available choose question from category pool</span>
+        <span class="k">if</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;timeLimit&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">stmWhere</span> <span class="o">=</span> <span class="s2">&quot; time_id = </span><span class="si">%(timeLimit)s</span><span class="s2"> AND &quot;</span>
+
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT time_id, time_in_seconds FROM time_options &quot;</span>
+                 <span class="s2">&quot;WHERE </span><span class="si">%s</span><span class="s2"> active = 1 ORDER BY RAND() LIMIT 1&quot;</span><span class="p">)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">query</span> <span class="o">%</span> <span class="n">stmWhere</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="bp">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Game.getGame"><a class="viewcode-back" href="../../rstFiles/app.Game.html#app.Game.Game.getGame">[docs]</a>    <span class="k">def</span> <span class="nf">getGame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># game id</span>
+        <span class="n">g_id</span> <span class="o">=</span> <span class="bp">None</span>
+
+        <span class="c1"># return object</span>
+        <span class="n">returnDict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;game_id&#39;</span><span class="p">:</span> <span class="n">g_id</span><span class="p">}</span>
+
+        <span class="c1"># get queued users</span>
+        <span class="n">users</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getQueuedUsers</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">users</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="c1"># set game_id</span>
+            <span class="n">g_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getGameID</span><span class="p">()</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+
+            <span class="n">returnDict</span><span class="p">[</span><span class="s1">&#39;game_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">g_id</span>
+            <span class="n">returnDict</span><span class="p">[</span><span class="s1">&#39;users&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="c1"># game specific creation based on parameters</span>
+            <span class="n">category</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getCategory</span><span class="p">()</span>   <span class="c1"># [{question_id}, {text}, {category_id}]</span>
+            <span class="n">wager</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getWager</span><span class="p">()</span>         <span class="c1"># [{credit_id}, {credit_value}]</span>
+            <span class="n">timeLimit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTimeLimit</span><span class="p">()</span>  <span class="c1"># [{time_id}, {time_in_seconds}]</span>
+
+            <span class="c1"># set return object</span>
+            <span class="n">returnDict</span><span class="p">[</span><span class="s1">&#39;question&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">category</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span>
+            <span class="n">returnDict</span><span class="p">[</span><span class="s1">&#39;wager&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wager</span><span class="p">[</span><span class="s1">&#39;credit_value&#39;</span><span class="p">]</span>
+            <span class="n">returnDict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timeLimit</span><span class="p">[</span><span class="s1">&#39;time_in_seconds&#39;</span><span class="p">]</span>
+
+            <span class="c1"># move users from queue to game</span>
+            <span class="k">for</span> <span class="n">qUser</span> <span class="ow">in</span> <span class="n">users</span><span class="p">:</span>
+                <span class="n">qUser</span><span class="p">[</span><span class="s1">&#39;category_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">category</span><span class="p">[</span><span class="s1">&#39;category_id&#39;</span><span class="p">]</span>
+                <span class="n">qUser</span><span class="p">[</span><span class="s1">&#39;question_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">category</span><span class="p">[</span><span class="s1">&#39;question_id&#39;</span><span class="p">]</span>
+                <span class="n">qUser</span><span class="p">[</span><span class="s1">&#39;wager_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">wager</span><span class="p">[</span><span class="s1">&#39;credit_id&#39;</span><span class="p">]</span>
+                <span class="n">qUser</span><span class="p">[</span><span class="s1">&#39;time_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">timeLimit</span><span class="p">[</span><span class="s1">&#39;time_id&#39;</span><span class="p">]</span>
+                <span class="n">qUser</span><span class="p">[</span><span class="s1">&#39;game_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">g_id</span>
+                <span class="c1"># update queue</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;UPDATE game_queue SET game_id = </span><span class="si">%(game_id)s</span><span class="s2">, &quot;</span>
+                         <span class="s2">&quot;category_id = </span><span class="si">%(category_id)s</span><span class="s2">, question_id = </span><span class="si">%(question_id)s</span><span class="s2">, &quot;</span>
+                         <span class="s2">&quot;wager_id = </span><span class="si">%(wager_id)s</span><span class="s2">, time_id = </span><span class="si">%(time_id)s</span><span class="s2"> &quot;</span>
+                         <span class="s2">&quot;WHERE queue_id = </span><span class="si">%(queue_id)s</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">executeModifyQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">qUser</span><span class="p">)</span>
+                <span class="c1"># update game</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;INSERT INTO game (user_id, game_id) VALUES &quot;</span>
+                         <span class="s2">&quot;(</span><span class="si">%(user_id)s</span><span class="s2">, </span><span class="si">%(game_id)s</span><span class="s2">)&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">executeModifyQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">qUser</span><span class="p">)</span>
+
+                <span class="c1"># get user info</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT username FROM users WHERE user_id = </span><span class="si">%(user_id)s</span><span class="s2"> &quot;</span><span class="p">)</span>
+                <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">qUser</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT data as avatar FROM users_metadata WHERE &quot;</span>
+                         <span class="s2">&quot;user_id = </span><span class="si">%(user_id)s</span><span class="s2"> AND meta_name = &#39;avatar&#39;&quot;</span><span class="p">)</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">qUser</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+                    <span class="n">user</span><span class="p">[</span><span class="s1">&#39;avatar&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;avatar&#39;</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">user</span><span class="p">[</span><span class="s1">&#39;avatar&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                <span class="n">returnDict</span><span class="p">[</span><span class="s1">&#39;users&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">returnDict</span></div>
+
+<div class="viewcode-block" id="Game.endGame"><a class="viewcode-back" href="../../rstFiles/app.Game.html#app.Game.Game.endGame">[docs]</a>    <span class="k">def</span> <span class="nf">endGame</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;UPDATE game SET active = 0 WHERE &quot;</span>
+                 <span class="s2">&quot;game_id = </span><span class="si">%(game_id)s</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executeModifyQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;UPDATE game_queue SET active = 0 WHERE &quot;</span>
+                 <span class="s2">&quot;game_id = </span><span class="si">%(game_id)s</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executeModifyQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Success&quot;</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="Game.submitThoughts"><a class="viewcode-back" href="../../rstFiles/app.Game.html#app.Game.Game.submitThoughts">[docs]</a>    <span class="k">def</span> <span class="nf">submitThoughts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;UPDATE game SET thoughts = </span><span class="si">%(thoughts)s</span><span class="s2"> WHERE &quot;</span>
+                 <span class="s2">&quot;user_id = </span><span class="si">%(user_id)s</span><span class="s2"> and game_id = </span><span class="si">%(game_id)s</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executeModifyQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;Success&quot;</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="Game.getTotalPlayers"><a class="viewcode-back" href="../../rstFiles/app.Game.html#app.Game.Game.getTotalPlayers">[docs]</a>    <span class="k">def</span> <span class="nf">getTotalPlayers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT user_id FROM game  WHERE game_id = </span><span class="si">%(game_id)s</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cursor</span><span class="o">.</span><span class="n">rowcount</span></div>
+
+<div class="viewcode-block" id="Game.getComments"><a class="viewcode-back" href="../../rstFiles/app.Game.html#app.Game.Game.getComments">[docs]</a>    <span class="k">def</span> <span class="nf">getComments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sanitizeParams</span><span class="p">()</span>
+        <span class="n">playerResponses</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># get all comments for the game</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT user_id, username, thoughts FROM game INNER JOIN users &quot;</span>
+                 <span class="s2">&quot;USING(user_id) WHERE game_id = </span><span class="si">%(game_id)s</span><span class="s2"> and thoughts IS NOT NULL&quot;</span><span class="p">)</span>
+        <span class="n">playerResponses</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+        <span class="c1"># get user avatars</span>
+        <span class="k">for</span> <span class="n">uinfo</span> <span class="ow">in</span> <span class="n">playerResponses</span><span class="p">:</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;SELECT data FROM users_metadata WHERE meta_name = &#39;avatar&#39; &quot;</span>
+                <span class="s2">&quot;AND user_id = </span><span class="si">%(user_id)s</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">uinfo</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+                <span class="n">uinfo</span><span class="p">[</span><span class="s1">&#39;avatar&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">uinfo</span><span class="p">[</span><span class="s1">&#39;avatar&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">playerResponses</span></div>
+
+<div class="viewcode-block" id="Game.getMetaData"><a class="viewcode-back" href="../../rstFiles/app.Game.html#app.Game.Game.getMetaData">[docs]</a>    <span class="k">def</span> <span class="nf">getMetaData</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; get metadata &quot;&quot;&quot;</span>
+        <span class="n">returnObj</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT time_id, time_in_seconds FROM time_options WHERE active = 1&quot;</span><span class="p">)</span>
+        <span class="n">returnObj</span><span class="p">[</span><span class="s1">&#39;times&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="p">())</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;SELECT credit_id, credit_value FROM credit_options WHERE active = 1&quot;</span><span class="p">)</span>
+        <span class="n">returnObj</span><span class="p">[</span><span class="s1">&#39;wagers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">executeQuery</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="p">())</span>
+        <span class="k">return</span> <span class="n">returnObj</span></div></div>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># info = {</span>
+    <span class="c1">#     &#39;id&#39;: &#39;gameUI&#39;,</span>
+    <span class="c1">#     &#39;thoughts&#39;: &#39;whatever&#39;,</span>
+    <span class="c1">#     &#39;game_id&#39;: &#39;1&#39;,</span>
+    <span class="c1">#     &#39;user_id&#39;: &#39;36&#39;</span>
+    <span class="c1"># }</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;votePoll&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;game_id&#39;</span><span class="p">:</span> <span class="s1">&#39;7&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;function&#39;</span><span class="p">:</span> <span class="s1">&#39;GG&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;counter&#39;</span><span class="p">:</span> <span class="s1">&#39;0&#39;</span>
+    <span class="p">}</span>
+    <span class="sd">&quot;&quot;&quot; modify user information for testing &quot;&quot;&quot;</span>
+    <span class="c1"># info[&#39;stuff&#39;] = &quot;stuff&quot;</span>
+
+    <span class="c1">#print(Game(info).addToQueue())</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">Game</span><span class="p">(</span><span class="n">info</span><span class="p">)</span><span class="o">.</span><span class="n">getVotes</span><span class="p">())</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">ISIB Sphinx PyDocs 1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Tony Moses.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,476 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>engine &mdash; ISIB Sphinx PyDocs 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="top" title="ISIB Sphinx PyDocs 1 documentation" href="../index.html" />
+    <link rel="up" title="Module code" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">ISIB Sphinx PyDocs 1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for engine</h1><div class="highlight"><pre>
+<span class="ch">#!/usr/bin/python</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This script handles all of the processing of the debate site</span>
+<span class="sd">@author: Tony Moses</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">cgi</span>
+<span class="c1">#from formMockup import formMockup</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">cgitb</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+
+
+<span class="c1"># next 3 lines not for production</span>
+<span class="k">if</span> <span class="s2">&quot;REQUEST_METHOD&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">)))</span>
+<span class="kn">from</span> <span class="nn">app.Log</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">app.User</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">app.Category</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">app.Question</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">app.Game</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">app.Feedback</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<span class="n">cgitb</span><span class="o">.</span><span class="n">enable</span><span class="p">()</span>
+
+<span class="c1"># global fieldstorage object</span>
+<span class="n">FSTOR</span> <span class="o">=</span> <span class="bp">None</span>
+
+<div class="viewcode-block" id="logAction"><a class="viewcode-back" href="../rstFiles/engine.html#engine.logAction">[docs]</a><span class="k">def</span> <span class="nf">logAction</span><span class="p">(</span><span class="n">fs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    function logs player actions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="s1">&#39;page&#39;</span> <span class="ow">in</span> <span class="n">fs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="n">Log</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">getAllLogs</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="s1">&#39;user_id&#39;</span> <span class="ow">in</span> <span class="n">fs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="n">Log</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">newLog</span><span class="p">()</span>
+    <span class="n">returnJson</span><span class="p">(</span><span class="n">l</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="testDep"><a class="viewcode-back" href="../rstFiles/engine.html#engine.testDep">[docs]</a><span class="k">def</span> <span class="nf">testDep</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; test function for class functionality (not needed for production) &quot;&quot;&quot;</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">returnJson</span><span class="p">(</span><span class="nb">dir</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="bp">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="sendHeaders"><a class="viewcode-back" href="../rstFiles/engine.html#engine.sendHeaders">[docs]</a><span class="k">def</span> <span class="nf">sendHeaders</span><span class="p">(</span><span class="n">ctype</span><span class="o">=</span><span class="s2">&quot;text/html&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Sends headers &quot;&quot;&quot;</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;Content-Type: </span><span class="si">%s</span><span class="s2">; charset=utf-8</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">ctype</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="returnJson"><a class="viewcode-back" href="../rstFiles/engine.html#engine.returnJson">[docs]</a><span class="k">def</span> <span class="nf">returnJson</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">toJSON</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Takes data (string) send back return value (JSON by default)&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">toJSON</span><span class="p">:</span>
+        <span class="n">sendHeaders</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sendHeaders</span><span class="p">(</span><span class="s2">&quot;application/json&quot;</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="showParams"><a class="viewcode-back" href="../rstFiles/engine.html#engine.showParams">[docs]</a><span class="k">def</span> <span class="nf">showParams</span><span class="p">(</span><span class="n">fs</span><span class="p">):</span>
+    <span class="n">returnJson</span><span class="p">({</span><span class="s1">&#39;funcParams&#39;</span><span class="p">:</span> <span class="n">fs</span><span class="p">})</span></div>
+
+
+<div class="viewcode-block" id="getAllUsers"><a class="viewcode-back" href="../rstFiles/engine.html#engine.getAllUsers">[docs]</a><span class="k">def</span> <span class="nf">getAllUsers</span><span class="p">(</span><span class="n">fs</span><span class="p">):</span>
+    <span class="n">returnJson</span><span class="p">(</span><span class="n">User</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">getAllUsers</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="submitUserInfo"><a class="viewcode-back" href="../rstFiles/engine.html#engine.submitUserInfo">[docs]</a><span class="k">def</span> <span class="nf">submitUserInfo</span><span class="p">(</span><span class="n">fs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; submit user info to database &quot;&quot;&quot;</span>
+    <span class="n">returnObj</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">}</span>
+    <span class="k">if</span> <span class="s1">&#39;oper&#39;</span> <span class="ow">in</span> <span class="n">fs</span><span class="p">:</span>
+        <span class="n">uInfo</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">updateUser</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">uInfo</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">submitUser</span><span class="p">()</span>
+
+    <span class="c1"># handle return values</span>
+    <span class="k">if</span> <span class="n">uInfo</span><span class="p">[</span><span class="s1">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">returnObj</span> <span class="o">=</span> <span class="n">uInfo</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">returnObj</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">uInfo</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span>
+
+    <span class="n">returnJson</span><span class="p">(</span><span class="n">returnObj</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="userFunctions"><a class="viewcode-back" href="../rstFiles/engine.html#engine.userFunctions">[docs]</a><span class="k">def</span> <span class="nf">userFunctions</span><span class="p">(</span><span class="n">fs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; test function for class functionality (not needed for production) &quot;&quot;&quot;</span>
+    <span class="n">user_info</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="s2">&quot;id&quot;</span> <span class="ow">in</span> <span class="n">fs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">fs</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;login&#39;</span><span class="p">:</span>
+            <span class="sd">&quot;&quot;&quot; create a json object noting user_info &quot;&quot;&quot;</span>
+            <span class="n">valid_user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">isValidUser</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">valid_user</span><span class="p">:</span>
+                <span class="n">user_info</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">getUserCookie</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">fs</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;profile&#39;</span><span class="p">:</span>
+            <span class="n">user_info</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">getUserCookie</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">fs</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;tr&#39;</span><span class="p">:</span>
+            <span class="n">user_info</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">getUserTrackRecord</span><span class="p">()</span>
+    <span class="n">returnJson</span><span class="p">(</span><span class="n">user_info</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="validateUser"><a class="viewcode-back" href="../rstFiles/engine.html#engine.validateUser">[docs]</a><span class="k">def</span> <span class="nf">validateUser</span><span class="p">(</span><span class="n">fs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; test function for class functionality (not needed for production) &quot;&quot;&quot;</span>
+    <span class="n">user_info</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="s2">&quot;username&quot;</span> <span class="ow">in</span> <span class="n">fs</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; create a json object noting user_info &quot;&quot;&quot;</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span>
+        <span class="n">valid_user</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">isValidUser</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">valid_user</span><span class="p">:</span>
+            <span class="n">user_info</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">getUserByName</span><span class="p">()</span>
+
+            <span class="c1"># do not send back hashed password</span>
+            <span class="k">del</span> <span class="n">user_info</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;password&#39;</span><span class="p">]</span>
+    <span class="n">returnJson</span><span class="p">(</span><span class="n">user_info</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="userAvailabilityCheck"><a class="viewcode-back" href="../rstFiles/engine.html#engine.userAvailabilityCheck">[docs]</a><span class="k">def</span> <span class="nf">userAvailabilityCheck</span><span class="p">(</span><span class="n">fs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; test function for class functionality (not needed for production) &quot;&quot;&quot;</span>
+    <span class="n">availability</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">if</span> <span class="s2">&quot;username&quot;</span> <span class="ow">in</span> <span class="n">fs</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; create a json object noting availability &quot;&quot;&quot;</span>
+        <span class="n">availability</span><span class="p">[</span><span class="s2">&quot;available&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">User</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">isUser</span><span class="p">())</span>
+
+    <span class="n">returnJson</span><span class="p">(</span><span class="n">availability</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="feedback"><a class="viewcode-back" href="../rstFiles/engine.html#engine.feedback">[docs]</a><span class="k">def</span> <span class="nf">feedback</span><span class="p">(</span><span class="n">fs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; send user responses to admin &quot;&quot;&quot;</span>
+    <span class="n">returnVal</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="s2">&quot;id&quot;</span> <span class="ow">in</span> <span class="n">fs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">fs</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;frmFeedback&#39;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">import</span> <span class="nn">smtplib</span>
+                <span class="kn">from</span> <span class="nn">email.mime.multipart</span> <span class="kn">import</span> <span class="n">MIMEMultipart</span>
+                <span class="kn">from</span> <span class="nn">email.mime.text</span> <span class="kn">import</span> <span class="n">MIMEText</span>
+
+                <span class="n">fromaddr</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;email&#39;</span><span class="p">)</span>
+                <span class="n">category</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+                <span class="n">msgBody</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">)</span>
+
+                <span class="n">toaddr</span> <span class="o">=</span> <span class="s1">&#39;tonym415@gmail.com&#39;</span>
+                <span class="n">heading</span> <span class="o">=</span> <span class="s2">&quot; Concerns from </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">name</span>
+
+                <span class="k">if</span> <span class="n">category</span> <span class="o">!=</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>
+                    <span class="n">category</span> <span class="o">=</span> <span class="n">Feedback</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">getCategoryByID</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;fbc_name&#39;</span><span class="p">]</span>
+                    <span class="n">subject</span> <span class="o">=</span> <span class="s1">&#39;Category: &#39;</span> <span class="o">+</span> <span class="n">category</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">heading</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">subject</span> <span class="o">=</span> <span class="s1">&#39;Uncategorized &#39;</span> <span class="o">+</span> <span class="n">heading</span>
+
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">MIMEMultipart</span><span class="p">()</span>
+                <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;From&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fromaddr</span>
+                <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;To&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">toaddr</span>
+                <span class="n">msg</span><span class="p">[</span><span class="s1">&#39;Subject&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subject</span>
+
+                <span class="n">msg</span><span class="o">.</span><span class="n">attach</span><span class="p">(</span><span class="n">MIMEText</span><span class="p">(</span><span class="n">msgBody</span><span class="p">,</span> <span class="s1">&#39;plain&#39;</span><span class="p">))</span>
+
+                <span class="n">server</span> <span class="o">=</span> <span class="n">smtplib</span><span class="o">.</span><span class="n">SMTP</span><span class="p">(</span><span class="s1">&#39;localhost&#39;</span><span class="p">)</span>
+                <span class="n">text</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">as_string</span><span class="p">()</span>
+                <span class="n">server</span><span class="o">.</span><span class="n">sendmail</span><span class="p">(</span><span class="n">fromaddr</span><span class="p">,</span> <span class="n">toaddr</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+                <span class="n">server</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">returnJson</span><span class="p">({</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s2">&quot;{}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">e</span><span class="p">)})</span>
+                <span class="nb">exit</span><span class="p">()</span>
+            <span class="c1"># if everything worked send data back for custom confirmation</span>
+            <span class="n">returnVal</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Success&quot;</span>
+            <span class="n">returnVal</span><span class="p">[</span><span class="s1">&#39;message&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">, your message has been sent. Please expect a response soon&quot;</span> <span class="o">%</span> <span class="n">name</span>
+            <span class="c1"># sys.stderr.write(&quot;{}&quot;.format(locals()))</span>
+            <span class="n">returnJson</span><span class="p">(</span><span class="n">returnVal</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">fs</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;feedback_categories&#39;</span><span class="p">:</span>
+            <span class="n">returnJson</span><span class="p">(</span><span class="n">Feedback</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">getAllCategories</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="modifyCategory"><a class="viewcode-back" href="../rstFiles/engine.html#engine.modifyCategory">[docs]</a><span class="k">def</span> <span class="nf">modifyCategory</span><span class="p">(</span><span class="n">fs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; modify fs to be properly consumed by Category() &quot;&quot;&quot;</span>
+    <span class="c1"># check for the existence of subcategory</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="n">fs</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;deleteCategory&quot;</span><span class="p">,</span> <span class="s1">&#39;renameCategory&#39;</span><span class="p">,</span> <span class="s1">&#39;adoptCategory&#39;</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot; deactivates Category &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">Category</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">updateCategory</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">fs</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;createCategory&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Creates new Category &quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">Category</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">newCategory</span><span class="p">()</span>
+
+    <span class="n">returnJson</span><span class="p">(</span><span class="n">c</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="getCategories"><a class="viewcode-back" href="../rstFiles/engine.html#engine.getCategories">[docs]</a><span class="k">def</span> <span class="nf">getCategories</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; gathers all categories &quot;&quot;&quot;</span>
+    <span class="n">returnJson</span><span class="p">({</span><span class="s2">&quot;categories&quot;</span><span class="p">:</span> <span class="n">Category</span><span class="p">()</span><span class="o">.</span><span class="n">getAllCategories</span><span class="p">()})</span></div>
+
+
+<div class="viewcode-block" id="modifyQuestion"><a class="viewcode-back" href="../rstFiles/engine.html#engine.modifyQuestion">[docs]</a><span class="k">def</span> <span class="nf">modifyQuestion</span><span class="p">(</span><span class="n">fs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; modify fs to be properly consumed by Category() &quot;&quot;&quot;</span>
+    <span class="c1"># check for the existence of subcategory</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">if</span> <span class="n">fs</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;deleteQuestion&quot;</span><span class="p">,</span> <span class="s1">&#39;editQuestion&#39;</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot; deactivates Category &quot;&quot;&quot;</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">Question</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">updateQuestion</span><span class="p">()</span>
+    <span class="k">elif</span> <span class="n">fs</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;createQuestion&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Creates new Category &quot;&quot;&quot;</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">Question</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">newQuestion</span><span class="p">()</span>
+
+    <span class="n">returnJson</span><span class="p">(</span><span class="n">q</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="getCategoryQuestionsByID"><a class="viewcode-back" href="../rstFiles/engine.html#engine.getCategoryQuestionsByID">[docs]</a><span class="k">def</span> <span class="nf">getCategoryQuestionsByID</span><span class="p">(</span><span class="n">fs</span><span class="p">):</span>
+    <span class="n">returnObj</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Question</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">getQuestionsByCat</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">&#39;error&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">returnObj</span><span class="p">[</span><span class="s1">&#39;questions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">q</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">returnObj</span> <span class="o">=</span> <span class="n">q</span>
+    <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="n">returnObj</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="s1">&#39;None&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;msg&#39;</span><span class="p">:</span> <span class="s1">&#39;No question are available for this category&#39;</span>
+        <span class="p">}}</span>
+
+    <span class="n">returnJson</span><span class="p">(</span><span class="n">returnObj</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="gameFunctions"><a class="viewcode-back" href="../rstFiles/engine.html#engine.gameFunctions">[docs]</a><span class="k">def</span> <span class="nf">gameFunctions</span><span class="p">(</span><span class="n">fs</span><span class="p">):</span>
+    <span class="n">returnObj</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="s1">&#39;id&#39;</span> <span class="ow">in</span> <span class="n">fs</span><span class="p">:</span>
+        <span class="c1"># id tells what sub function to perform</span>
+        <span class="k">if</span> <span class="n">fs</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="s1">&#39;All&#39;</span><span class="p">,</span> <span class="s1">&#39;CategoryOnly&#39;</span><span class="p">,</span> <span class="s1">&#39;RandomQuestion&#39;</span><span class="p">]:</span>
+            <span class="c1"># counter = 0 indicates first time submitting params</span>
+            <span class="k">if</span> <span class="n">fs</span><span class="p">[</span><span class="s1">&#39;counter&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;0&#39;</span><span class="p">:</span>
+                <span class="n">returnObj</span> <span class="o">=</span> <span class="n">Game</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">addToQueue</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># counter &gt; 0 indicates checking for game</span>
+                <span class="c1"># get players from queue</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">Game</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">getGame</span><span class="p">()</span>
+                <span class="c1"># send return data</span>
+                <span class="n">returnObj</span> <span class="o">=</span> <span class="n">data</span>
+
+                <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;game_id&#39;</span><span class="p">]:</span>
+                    <span class="c1"># if queue properly populated</span>
+                    <span class="n">returnObj</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;complete&#39;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># if queue not properly populated</span>
+                    <span class="n">returnObj</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;pending&#39;</span>
+        <span class="k">elif</span> <span class="n">fs</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;commentPoll&#39;</span><span class="p">:</span>
+            <span class="c1"># get comments from players from game</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">Game</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">getComments</span><span class="p">()</span>
+            <span class="n">totPlayers</span> <span class="o">=</span> <span class="n">Game</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">getTotalPlayers</span><span class="p">()</span>
+
+            <span class="c1"># send return data</span>
+            <span class="n">returnObj</span><span class="p">[</span><span class="s1">&#39;users&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="n">returnObj</span><span class="p">[</span><span class="s1">&#39;pending&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">totPlayers</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">totPlayers</span><span class="p">:</span>  <span class="c1"># if no data returned</span>
+                <span class="c1"># if queue not properly populated</span>
+                <span class="n">returnObj</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;pending&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># if queue properly populated</span>
+                <span class="n">returnObj</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;complete&#39;</span>
+        <span class="k">elif</span> <span class="n">fs</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;votePoll&#39;</span><span class="p">:</span>
+            <span class="c1"># total number of players in the game</span>
+            <span class="n">totPlayers</span> <span class="o">=</span> <span class="n">Game</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">getTotalPlayers</span><span class="p">()</span>
+
+            <span class="c1"># get votes from players from game</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">Game</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">getVotes</span><span class="p">()</span>
+
+            <span class="c1"># send return data</span>
+            <span class="n">returnObj</span><span class="p">[</span><span class="s1">&#39;users&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="n">returnObj</span><span class="p">[</span><span class="s1">&#39;pending&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">totPlayers</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">totPlayers</span><span class="p">:</span>  <span class="c1"># if no data returned</span>
+                <span class="c1"># if queue not properly populated</span>
+                <span class="n">returnObj</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;pending&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># if queue properly populated</span>
+                <span class="n">returnObj</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;complete&#39;</span>
+                <span class="c1"># end game</span>
+                <span class="n">Game</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">endGame</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="n">fs</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;debateVote&#39;</span><span class="p">:</span>
+            <span class="c1"># submit vote</span>
+            <span class="n">returnObj</span> <span class="o">=</span> <span class="n">Game</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">submitVote</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">fs</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;getMetaData&#39;</span><span class="p">]:</span>
+            <span class="n">returnObj</span> <span class="o">=</span> <span class="n">Game</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">getMetaData</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">fs</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;cancelGame&#39;</span><span class="p">]:</span>
+            <span class="c1"># cancel game search</span>
+            <span class="n">returnObj</span> <span class="o">=</span> <span class="n">Game</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">removeFromQueue</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">fs</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;gameUI&#39;</span><span class="p">]:</span>
+            <span class="c1"># submit game</span>
+            <span class="n">returnObj</span> <span class="o">=</span> <span class="n">Game</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">submitThoughts</span><span class="p">()</span>
+
+    <span class="n">returnJson</span><span class="p">(</span><span class="n">returnObj</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="profileFunctions"><a class="viewcode-back" href="../rstFiles/engine.html#engine.profileFunctions">[docs]</a><span class="k">def</span> <span class="nf">profileFunctions</span><span class="p">(</span><span class="n">fs</span><span class="p">):</span>
+    <span class="n">returnObj</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="s1">&#39;id&#39;</span> <span class="ow">in</span> <span class="n">fs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">fs</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;profile&#39;</span><span class="p">:</span>
+            <span class="n">returnObj</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">profileUpdate</span><span class="p">(</span><span class="n">FSTOR</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">fs</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;getUser&#39;</span><span class="p">:</span>
+            <span class="n">returnObj</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">fs</span><span class="p">)</span><span class="o">.</span><span class="n">getUserByID</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">returnJson</span><span class="p">(</span><span class="n">returnObj</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="doFunc"><a class="viewcode-back" href="../rstFiles/engine.html#engine.doFunc">[docs]</a><span class="k">def</span> <span class="nf">doFunc</span><span class="p">(</span><span class="n">fStor</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Deciphers function to run based on POSTed parameters</span>
+<span class="sd">        Executes the desired function with appropriate parameters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fStor</span> <span class="o">=</span> <span class="n">cgiFieldStorageToDict</span><span class="p">(</span><span class="n">fStor</span><span class="p">)</span>
+    <span class="n">funcName</span> <span class="o">=</span> <span class="n">fStor</span><span class="p">[</span><span class="s1">&#39;function&#39;</span><span class="p">]</span>
+    <span class="sd">&quot;&quot;&quot; sanitize store for use in classes &quot;&quot;&quot;</span>
+    <span class="n">unused_members</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;function&#39;</span><span class="p">,</span> <span class="s1">&#39;_password&#39;</span><span class="p">]</span>
+    <span class="n">fStor</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">fStor</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">fStor</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">unused_members</span><span class="p">}</span>
+
+    <span class="k">if</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;CQ&quot;</span><span class="p">,</span> <span class="s2">&quot;EQ&quot;</span><span class="p">,</span> <span class="s2">&quot;DQ&quot;</span><span class="p">]:</span>
+        <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;modifyQuestion&#39;</span><span class="p">](</span><span class="n">fStor</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;CC&quot;</span><span class="p">,</span> <span class="s2">&quot;RC&quot;</span><span class="p">,</span> <span class="s2">&quot;DC&quot;</span><span class="p">,</span> <span class="s2">&quot;AC&quot;</span><span class="p">]:</span>
+        <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;modifyCategory&#39;</span><span class="p">](</span><span class="n">fStor</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;GQ&quot;</span><span class="p">]:</span>
+        <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;getCategoryQuestionsByID&#39;</span><span class="p">](</span><span class="n">fStor</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;GC&quot;</span><span class="p">]:</span>
+        <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;getCategories&#39;</span><span class="p">]()</span>
+    <span class="k">elif</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;GAU&quot;</span><span class="p">]:</span>
+        <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;getAllUsers&#39;</span><span class="p">](</span><span class="n">fStor</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;VU&quot;</span><span class="p">,</span> <span class="s1">&#39;TRU&#39;</span><span class="p">,</span> <span class="s2">&quot;GCU&quot;</span><span class="p">]:</span>
+        <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;userFunctions&#39;</span><span class="p">](</span><span class="n">fStor</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;SUI&quot;</span><span class="p">,</span> <span class="s2">&quot;UU&quot;</span><span class="p">]:</span>
+        <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;submitUserInfo&#39;</span><span class="p">](</span><span class="n">fStor</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;TD&quot;</span><span class="p">]:</span>
+        <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;testDep&#39;</span><span class="p">](</span><span class="n">fStor</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;UAC&quot;</span><span class="p">]:</span>
+        <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;userAvailabilityCheck&#39;</span><span class="p">](</span><span class="n">fStor</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;GMD&quot;</span><span class="p">,</span> <span class="s2">&quot;GG&quot;</span><span class="p">,</span> <span class="s2">&quot;CG&quot;</span><span class="p">,</span> <span class="s2">&quot;SUG&quot;</span><span class="p">,</span> <span class="s2">&quot;SVG&quot;</span><span class="p">,</span> <span class="s2">&quot;GCG&quot;</span><span class="p">,</span> <span class="s2">&quot;GVG&quot;</span><span class="p">]:</span>
+        <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;gameFunctions&#39;</span><span class="p">](</span><span class="n">fStor</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;FB&quot;</span><span class="p">,</span> <span class="s2">&quot;FBC&quot;</span><span class="p">]:</span>
+        <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;feedback&#39;</span><span class="p">](</span><span class="n">fStor</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;LOG&quot;</span><span class="p">,</span> <span class="s1">&#39;GL&#39;</span><span class="p">]:</span>
+        <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;logAction&#39;</span><span class="p">](</span><span class="n">fStor</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">funcName</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;GUP&#39;</span><span class="p">,</span> <span class="s2">&quot;UP&quot;</span><span class="p">,</span> <span class="s2">&quot;UP&quot;</span><span class="p">]:</span>
+        <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;profileFunctions&#39;</span><span class="p">](</span><span class="n">fStor</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;showParams&#39;</span><span class="p">](</span><span class="n">fStor</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="cgiFieldStorageToDict"><a class="viewcode-back" href="../rstFiles/engine.html#engine.cgiFieldStorageToDict">[docs]</a><span class="k">def</span> <span class="nf">cgiFieldStorageToDict</span><span class="p">(</span><span class="n">fieldstorage</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Get a plain dictionary from cgi.FieldStorage &quot;&quot;&quot;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">fieldstorage</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">params</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">fieldstorage</span><span class="o">.</span><span class="n">getvalue</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">params</span></div>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../rstFiles/engine.html#engine.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Self test this module using hardcoded data &quot;&quot;&quot;</span>
+    <span class="c1"># form = formMockup(id=&quot;gameParameters&quot;,</span>
+    <span class="c1">#                   p_paramCategory=&quot;1&quot;,</span>
+    <span class="c1">#                   paramQuestions=&quot;8&quot;,</span>
+    <span class="c1">#                   timeLimit=&quot;2&quot;,</span>
+    <span class="c1">#                   wager=&quot;1&quot;,</span>
+    <span class="c1">#                   user_id=&quot;36&quot;,</span>
+    <span class="c1">#                   function=&quot;GG&quot;,</span>
+    <span class="c1">#                   counter=&quot;2&quot;)</span>
+
+    <span class="c1">#form = formMockup(</span>
+    <span class="c1">#       id=&quot;votePoll&quot;,</span>
+    <span class="c1">#       game_id=7,</span>
+    <span class="c1">#       function=&quot;GVG&quot;,</span>
+    <span class="c1">#       counter=1)</span>
+    <span class="sd">&quot;&quot;&quot; valid user in db (DO NOT CHANGE: modify below)&quot;&quot;&quot;</span></div>
+    <span class="c1"># form = formMockup(function=&quot;SUI&quot;, confirm_password=&quot;password&quot;,</span>
+    <span class="c1">#                   first_name=&quot;Antonio&quot;, paypal_account=&quot;tonym415&quot;,</span>
+    <span class="c1">#                   password=&quot;password&quot;, email=&quot;tonym415@gmail&quot;,</span>
+    <span class="c1">#                   last_name=&quot;Moses&quot;, username=&quot;tonym415&quot;)</span>
+    <span class="c1">#doFunc(form)</span>
+
+<span class="k">if</span> <span class="s2">&quot;REQUEST_METHOD&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+    <span class="n">FSTOR</span> <span class="o">=</span> <span class="n">cgi</span><span class="o">.</span><span class="n">FieldStorage</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s1">&#39;function&#39;</span> <span class="ow">in</span> <span class="n">FSTOR</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="c1"># run function depending on given values</span>
+        <span class="n">doFunc</span><span class="p">(</span><span class="n">FSTOR</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">ISIB Sphinx PyDocs 1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Tony Moses.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
+    </div>
+  </body>
+</html>

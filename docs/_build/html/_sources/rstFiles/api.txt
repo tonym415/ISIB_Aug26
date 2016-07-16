@@ -1,0 +1,10 @@
+API
+====================================================
+
+.. toctree::
+    :maxdepth: 2
+
+    app/__index__
+    feedback/__index__
+    game/__index__
+    signup/__index__

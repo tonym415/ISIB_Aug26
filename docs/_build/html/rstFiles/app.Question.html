@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>app.Question module &mdash; ISIB Sphinx PyDocs 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/sidebar.js"></script>
+    <link rel="top" title="ISIB Sphinx PyDocs 1 documentation" href="../index.html" />
+    <link rel="up" title="app package" href="app.html" />
+    <link rel="next" title="app.User module" href="app.User.html" />
+    <link rel="prev" title="app.Log module" href="app.Log.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="app.User.html" title="app.User module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="app.Log.html" title="app.Log module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">ISIB Sphinx PyDocs 1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >cgi-bin</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="app.html" accesskey="U">app package</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-app.Question">
+<span id="app-question-module"></span><h1>app.Question module<a class="headerlink" href="#module-app.Question" title="Permalink to this headline">¶</a></h1>
+<p>The Question class is used to handle all functions related to the Question table</p>
+<dl class="class">
+<dt id="app.Question.Question">
+<em class="property">class </em><code class="descclassname">app.Question.</code><code class="descname">Question</code><span class="sig-paren">(</span><em>*userInfo</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/Question.html#Question"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.Question.Question" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="app.lib.Entity.html#app.lib.Entity.Entity" title="app.lib.Entity.Entity"><code class="xref py py-class docutils literal"><span class="pre">app.lib.Entity.Entity</span></code></a></p>
+<p>for category</p>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="app.Question.Question.getAllQuestions">
+<code class="descname">getAllQuestions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/Question.html#Question.getAllQuestions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.Question.Question.getAllQuestions" title="Permalink to this definition">¶</a></dt>
+<dd><p>get user information by name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="app.Question.Question.getQuestionsByCat">
+<code class="descname">getQuestionsByCat</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/Question.html#Question.getQuestionsByCat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.Question.Question.getQuestionsByCat" title="Permalink to this definition">¶</a></dt>
+<dd><p>get user information by name</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="app.Question.Question.newQuestion">
+<code class="descname">newQuestion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/Question.html#Question.newQuestion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.Question.Question.newQuestion" title="Permalink to this definition">¶</a></dt>
+<dd><p>insert new category with/without parent_id</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="app.Question.Question.sanitizeParams">
+<code class="descname">sanitizeParams</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/Question.html#Question.sanitizeParams"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.Question.Question.sanitizeParams" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="app.Question.Question.updateQuestion">
+<code class="descname">updateQuestion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/Question.html#Question.updateQuestion"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#app.Question.Question.updateQuestion" title="Permalink to this definition">¶</a></dt>
+<dd><p>update category with parameters</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="app.Log.html"
+                        title="previous chapter">app.Log module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="app.User.html"
+                        title="next chapter">app.User module</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rstFiles/app.Question.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="app.User.html" title="app.User module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="app.Log.html" title="app.Log module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">ISIB Sphinx PyDocs 1 documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >cgi-bin</a> &raquo;</li>
+          <li class="nav-item nav-item-2"><a href="app.html" >app package</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Tony Moses.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.
+    </div>
+  </body>
+</html>
