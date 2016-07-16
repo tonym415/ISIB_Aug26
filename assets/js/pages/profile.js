@@ -395,4 +395,29 @@ require([
             $(this).parent().parent().siblings().slideToggle('slow');
         }).parent().parent().siblings().hide();
 
+        
+    $('#payPalButton').on('click', function() {
+        $('#paypalPlaceholder').load('templates.html .payPalSnippet', function(response, status, xhr){
+            if (status != 'error'){
+               $(".payPalSnippet").dialog({
+                        // resizable: false,
+                        autoResize: true,
+                        //autoOpen: false,
+                        minHeight: "auto",
+                        closeOnEscape: true,
+                        dialogClass: 'no-close',
+                        modal: true,
+                        width: 'auto',
+                        height: 'auto',
+                        buttons: {
+                            Close: function () {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+                }
+        })
+            })
 });
+
+
