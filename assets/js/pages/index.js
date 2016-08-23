@@ -27,18 +27,20 @@ define(['jquery', 'validate', 'app', 'jqueryUI', 'cookie'], function($, validate
 
         // validate user
         $.ajax({
-            contentType: "application/x-www-form-urlencoded",
-            desc: 'Login',
-            data: formData,
-            type: "POST",
-            url: app.engine
+            contentType : "application/x-www-form-urlencoded",
+            desc        : 'Login',
+            data        : formData,
+            type        : "POST",
+            url         : app.engine
         })
         .done(function(result){
-            if ($.isEmptyObject(result)){
+            //if ($.isEmptyObject(result)){
+            if (typeof result == "string" || $.isEmptyObject(result)){
                 var validator = $("#login").validate();
                 validator.showErrors({
                     "username": "Invalid User/Password combination<br /> Try <a href='" + app.pages.registration + "'>creating a user</a>"
                 });
+                app.dMessage("Error", result);
             }else{
                 // create cookie using user info
                 // console.log(result)

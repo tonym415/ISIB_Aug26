@@ -382,8 +382,6 @@ define([
                       testBtnDialog = btnContainer.dialog({
                           title: "Test Buttons",
                           dialogClass: 'no-close',
-                          //height: 200,
-                          //width: 800,
                           hide: { effect: "fade", duration: 300 },
                           show: { effect: "fade", duration: 300 },
                           buttons: [{
@@ -492,7 +490,6 @@ define([
                 FB.api('/me', queryFields,  function(response){
                     // ensure all queried params are accounted for
                     verified = lib.objHasKeys(queryFields.fields, response)
-                    //console.log(JSON.stringify(verified));
                     if ($.inArray('email',verified.missing) > -1){
                         FB.login(
                             function(response){
@@ -536,7 +533,6 @@ define([
                 $.cookie('user',null);
                 $.removeCookie('fb_id');
                 $.removeCookie('user');
-                //require(['plugins/fb']);
                 udFB.fbLogout();
                 window.location.assign(app.pages.home);
             });
@@ -844,7 +840,7 @@ define([
                 message = "";
             }
             settings = this.get_mboxDefaults(title, message);
-            if (options) settings = $.extend({}, this.mboxDefaults(title, message), options);
+            if (options) settings = $.extend({}, this.get_mboxDefaults(title, message), options);
             $('<div />').dialog(settings);
         },
         /** @property {function} getTheme Get current theme */
@@ -1011,7 +1007,6 @@ define([
                             }
                         });
                     $('.cd-form-bottom-message').click(app.toggleSignIn);
-                    app.dMessage("Alert",status );
                     app.showLoginDialog();
                 }else{
                     app.dMessageBox('Error', xhr);

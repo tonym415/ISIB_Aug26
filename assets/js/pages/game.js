@@ -20,7 +20,7 @@ require([
     // game parameters global var
     var user,
     timeout,
-    params,
+    gameParameters,
     timeLeft = 0,
     divVotePrefix = 'comment_',
     onStateClass = "ui-state-highlight",
@@ -100,7 +100,7 @@ require([
         // create ajax poll
         game = function(){
             $.ajax({
-                data: params,
+                data: gameParameters,
                 url: app.engine,
                 type: 'POST',
                 dataType: 'json',
@@ -109,7 +109,7 @@ require([
                 success: function(data){
                     if (pollCounter <= 4){
                         pollCounter++;
-                        params.counter = pollCounter;
+                        gameParameters.counter = pollCounter;
                         if (data.status === 'pending'){
                             getGame();
                         }else if(data.status === 'complete'){
@@ -117,8 +117,8 @@ require([
                             clearTimeout(timeout);
                             loadDebate(data);
                         }else if(data.queue){
-                            // set the created queue_id to params
-                            params.queue_id = data.queue.queue_id;
+                            // set the created queue_id to gameParameters
+                            gameParameters.queue_id = data.queue.queue_id;
                             matchText = 'Please stay with us while Isaiditbest finds you the best match up...';
                             $('#cancelSearch h1').html(matchText);
                             getGame();
@@ -156,7 +156,7 @@ require([
             });
         };
         // if this is the first time called immediately excute ajax
-        if (params.counter === 0){
+        if (gameParameters.counter === 0){
             $('#cancelSearch h1').html('Submitting your parameters...');
 
             // enable/disable appropriate panels
@@ -187,10 +187,10 @@ require([
             // add validation w/ handler
             $(this).validate({
                 submitHandler: function(){
-                    params = $(this.currentForm).serializeForm();
-                    params.user_id = user.user_id;
-                    params.function = 'GG';
-                    params.counter = pollCounter;
+                    gameParameters = $(this.currentForm).serializeForm();
+                    gameParameters.user_id = user.user_id;
+                    gameParameters.function = 'GG';
+                    gameParameters.counter = pollCounter;
                     getGame();
                 }
             });
@@ -774,11 +774,41 @@ require([
         }
     });
 
+    $('#TS').click(function(){
+        postData = {
+            'id': 'scripts/payoutExperiment',
+            'function': 'winner',
+            'winner' : 'tonym415',
+            'url' : 'tempBrowseLocal.html',
+            'wager_amount' : 10 ,
+            'question' : "Yadda or Blah?",
+            'text_image' : 'img.png',
+            'user_response' : 'BLAH, BLAH, BLAH',
+            'game_id' : 4
+            }
+        $.ajax({
+            url: app.engine,
+            data: postData,
+            type: 'POST',
+            dataType: 'json',
+            desc: 'Script Test',
+            success: function(result){
+                console.log(result)
+                app.dMessage("Alert", result);
+            },
+            error: function(e){
+                app.dMessage(e.name ,e.message);
+            }
+        })
+        $.unblockUI();
+    });
+
+
     /**
      * Toggle betwee the paramPanel and the gamePanel
      */
     function toggleParams(){
-        // disable/enable params
+        // disable/enable gameParameters
         $(paramPanel).toggleClass('ui-state-disabled');
         // disable/enable game
         $(gamePanel).toggleClass('ui-state-disabled');
@@ -885,7 +915,7 @@ require([
             clearTimeout(timeout);
             if (!data.error){
                 func = function(){
-                    params.counter = pollCounter = 0;
+                    gameParameters.counter = pollCounter = 0;
                     $(this).dialog('close');
                 };
                 msgOpt = {
@@ -914,11 +944,11 @@ require([
      * @Callback cancelGame
      */
     function cancelGame(callback){
-        params.function = 'CG';
-        params.id = 'cancelGame';
+        gameParameters.function = 'CG';
+        gameParameters.id = 'cancelGame';
         return $.ajax({
             url: app.engine,
-            data: params,
+            data: gameParameters,
             type: 'POST',
             dataType: 'json',
             desc: 'Game Cancellation'
@@ -1030,25 +1060,93 @@ require([
         });
 
 
-    /* Facebook Code */
+    /**
+    * ON HOLD - TODO - Provide account resolution for native players and players logging in
+    * from social media
+    *
+    */
+    //$('.mergeWarning').on('click', getMergeAccounts);
 
-
-
-
-
-
-    window.fbAsyncInit = function() {
-        FB.init({
-            appId      : '1518603065100165',
-            xfbml      : true,
-            version    : 'v2.5'
+    function getMergeAccounts(){
+        // retrieve user accounts with the same email
+        user = app.getCookie('user');
+        data = {
+           'function': "userFunctions",
+           'id': 'resolveUserAccounts',
+           'user_id': user.user_id
+        },
+        $.ajax({
+            data: data,
+            url: app.engine,
+            type: 'POST',
+            desc: 'utility (retrieve user conflicts)',
+            success: function(result){
+                // open modal to resolve conflict
+                renderMergeForm(result, user);
+            }
         });
-    };
-    (function(d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5&appId=1518603065100165";
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
+    }
+
+    function renderMergeForm(data, user){
+        $('#placeHolder')
+            .removeClass('hidden')
+            .load('templates.html #merger', function(response, status, xhr){
+                $.each(data, function(){
+                    info = "<p class='list-group-item-text'>Full Name: " + this.first_name + " " + this.last_name + "</p>" +
+                        "<p class='list-group-item-text'>Username: " + this.username + "</p>" +
+                        "<p class='list-group-item-text'>Created: " + this.created + "</p>"
+
+                    if (this.user_id == user.user_id){
+                         $('#current').html(info)
+                    }else{
+                        $('#suggested').append(
+                            $('<div class="panel panel-default">')
+                                .append(
+                                    $('<div class="panel-heading">')
+                                        .append(
+                                            $('<h4 class="panel-title">')
+                                                .append(
+                                                    $('<a>')
+                                                        .prop('href', "#" + this.username)
+                                                        .attr('data-toggle', "collapse")
+                                                        .attr('data-parent', "#suggested")
+                                                        .text('Are you, ' + this.first_name + ' ' + this.last_name + '?')
+                                                    )
+                                            ),
+                                    $('<div class="panel-collapse collapse">')
+                                        .prop('id', this.username)
+                                        .append(
+                                            $('<div>').html(info),
+                                            $('<p>'),
+                                            $('<form>')
+                                                .prop('id', this.username + '_form')
+                                                .prop('action', "")
+                                                .append(
+                                                    $('<label>').text('User:'),
+                                                    $('<input readonly type="text"  name="' + this.user_id + '_username">')
+                                                        .val(this.username),
+                                                    $('<label>').text('Password:'),
+                                                    $('<input type="text" name="' + this.user_id + '_password">')
+                                                )
+                                        )
+                                )
+                        )
+                    }
+            });
+            $("#merger").modal('show').css({'margin-top': '15%'});
+            $("#confirmMerge").on('click', selectMergeAccount)
+        });
+    }
+
+    function selectMergeAccount(){
+         // get uname/password
+        frm = $('#suggested').find('.in').find('form')
+        data = $(frm).serializeForm()
+        console.log(data);
+        // TODO - 1. query the db to validate login
+        // 2. if valid user find out what values to keep in the users table and
+        // 3. generate "keep/toss" form for users table
+        // 4. On the server-side "merge" accounts
+    }
+
 });
