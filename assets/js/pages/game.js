@@ -787,7 +787,7 @@ require([
             'game_id' : 4
             }
         $.ajax({
-            url: app.engine,
+            url: app.social,
             data: postData,
             type: 'POST',
             dataType: 'json',

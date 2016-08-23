@@ -236,6 +236,7 @@ define([
         pages: lib.navPages,
         defaultTheme: 'ui-lightness',
         engine: "cgi-bin/engine.py",
+        social: "cgi-bin/social.py",
         default_avatar: function(){
             // TODO: create random choice of default anonymous avatar (male/female)
             // - upload files
