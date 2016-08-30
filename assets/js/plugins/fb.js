@@ -10,7 +10,7 @@ define(['facebook'], function(){
         }else{
             return "Please log in to Facebook";
         }
-    };
+    }
 
     function handleSessionResponse(response){
         // if we don't have a session (which means the user has been logged out, redirect the user)

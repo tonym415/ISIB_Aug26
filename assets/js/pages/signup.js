@@ -107,8 +107,6 @@ require(['jquery','app' ,  'validate','jqueryUI', 'steps'], function($, app){
                     return $('#rulesChk').is(':checked');
                 }
 
-                // Start validation; Prevent form submission if false
-                return form.valid();
             },
             onFinished: function (event, currentIndex) {$(this).submit();}
         })

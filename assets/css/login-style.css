@@ -252,7 +252,7 @@ xsigin/signup popup
   background: #d2d8d8;
   color: #809191;
 }
-.cd-user-modal-container .cd-switcher a.selected {
+.cd-user-modal-container .cd-switcher .selected {
   background: #FFF;
   color: #505260;
 }
@@ -305,13 +305,13 @@ xsigin/signup popup
   background-repeat: no-repeat;
   background-position: 50% 0;
 }
-.cd-form label.cd-username {
+.cd-form .cd-username {
   /*background-image: url("../img/cd-icon-username.svg");*/
 }
-.cd-form label.cd-email {
+.cd-form .cd-email {
   /*background-image: url("../img/cd-icon-email.svg");*/
 }
-.cd-form label.cd-password {
+.cd-form .cd-password {
   /*background-image: url("../img/cd-icon-password.svg");*/
 }
 .cd-form input {
