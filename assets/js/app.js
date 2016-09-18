@@ -734,7 +734,7 @@ define([
                         element.append(new Option(cat, id));
                     }else{
                         // get top level categories
-                        if (parentID === 0){
+                        if (parseInt(parentID) === 0){
                             element.append(new Option(cat, id));
                         }
                     }

@@ -25,11 +25,11 @@ define(['jquery'], function($) {
     */
     var getWinner = function(data){
         // get the highest vote count of the users array
-        var result = Math.max.apply(Math, data.map(function(o){return o.votes;}));
+        var result = Math.max.apply(Math, data.map(function(o){return parseInt(o.votes);}));
         // get the highest vote count of the users array
         var sumWager = 0;
         for (var i=data.length; i--;){
-            sumWager+=data[i].wager;
+            sumWager+=parseInt(data[i].wager);
         }
 
         returnObj = {

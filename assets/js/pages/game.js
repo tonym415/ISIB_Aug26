@@ -115,11 +115,11 @@ require([
                         }else if(data.status === "complete"){
                             // update game ui
                             clearTimeout(timeout);
-                            loadDebate(data);
+                            loadDebate(data, true);
                         }else if(data.queue){
                             // set the created queue_id to gameParameters
                             gameParameters.queue_id = data.queue.queue_id;
-                            matchText = "Please stay with us while Isaiditbest finds you the best match up...";
+                            matchText = "Please stay with us while ISIB finds you the best match up...";
                             $("#cancelSearch h1").html(matchText);
                             getGame();
                         }
@@ -334,7 +334,7 @@ require([
                 }
             });
         };
-        // if this is the first time called immediately excute ajax
+        // if this is the first time called immediately execute ajax
         if (data.counter === 0){
             $("#game_panel").block({message: options.strInitial, css:{ width: "275px"}});
             ajaxCall();
@@ -424,25 +424,25 @@ require([
              * @param {element} form implied param
              */
             submitHandler: function(){
-            selectedComment = $("#selectable").find("li").hasClass(onStateClass);
-            if (selectedComment){
-                selectedComment =  $("#selectable").find("li.ui-state-highlight");
-                idText = selectedComment.children().prop("id");
-                vote_id = parseInt(idText.substring(divVotePrefix.length));
-            }else{
-                app.dMessage("Error", "You must select a comment.");
-                return false;
+                selectedComment = $("#selectable").find("li").hasClass(onStateClass);
+                if (selectedComment){
+                    selectedComment =  $("#selectable").find("li.ui-state-highlight");
+                    idText = selectedComment.children().prop("id");
+                    vote_id = parseInt(idText.substring(divVotePrefix.length));
+                }else{
+                    app.dMessage("Error", "You must select a comment.");
+                    return false;
+                }
+                //gather data
+                data = $(this.currentForm).serializeForm();
+                data.game_id = $("#game_id").val();
+                data.function = "SVG";
+                data.counter = pollCounter = 0;
+                data.user_id = user.user_id;
+                data.vote_id = vote_id;
+                submitVote(data);
             }
-            //gather data
-            data = $(this.currentForm).serializeForm();
-            data.game_id = $("#game_id").val();
-            data.function = "SVG";
-            data.counter = pollCounter = 0;
-            data.user_id = user.user_id;
-            data.vote_id = vote_id;
-            submitVote(data);
-        }
-    });
+        });
 
     /**
      * Submit Vote to database and start polling for winner data
@@ -489,7 +489,7 @@ require([
             getData: getVotePollData,
             desc: "Vote Polling",
             strPending: "Waiting on votes from {0} players ...",
-            completeFunc: loadWinner,
+            completeFunc: genWinnerPage,
             strInitial: "Gathering player votes..."
         };
         poller(opts);
@@ -541,6 +541,43 @@ require([
         $("#results_footer a").prop("href", app.pages.game)
     }
 
+    function genWinnerPage(users){
+        // format data to be sent to winner output
+        var obj = lib.getWinner(users);
+        postData = {
+            "id": "scripts/payoutExperiment",
+            "function": "winner",
+            "winner" : obj.winner.username,
+            "wager_amount" : obj.winner.pot ,
+            "game_id" : $("#game_id").val()
+            }
+        $.ajax({
+            url: app.social,
+            data: postData,
+            type: "POST",
+            dataType: "json",
+            desc: "Script Test",
+            success: function(result){
+                console.log(result)
+                app.dMessage("Alert", result);
+            },
+            error: function(e){
+                /*app.dMessage(e.status ,e.responseText);*/
+                $('#winner').html(e.responseText)
+            }
+        })
+        $.unblockUI();
+        // disable game, enable parameter selection
+        toggleParams();
+
+        // show results
+        if (!$(resultPanel).is(":visible")){
+            $(resultPanel)
+                .toggle()
+                .click();
+        }
+    }
+
     /* Handle Facebook sharing */
 
     /**
@@ -578,35 +615,30 @@ require([
     //   imageData - an array of bytes containing the image file contents
     //   message - an optional message you'd like associated with the image
 
-    function postImageToFacebook( authToken, filename, mimeType, imageData, message  )
-    {
-    // this is the multipart/form-data boundary we'll use
-    var boundary = "----ThisIsTheBoundary1234567890";
+    function postImageToFacebook( authToken, filename, mimeType, imageData, message  ) {
+        // this is the multipart/form-data boundary we'll use
+        var boundary = "----ThisIsTheBoundary1234567890";
 
-    // let's encode our image file, which is contained in the var
-    var formData = "--" + boundary + "\r\n"
-    formData += "Content-Disposition: form-data; name='source'; filename='" + filename + "'\r\n";
-    formData += "Content-Type: " + mimeType + "\r\n\r\n";
-    for ( var i = 0; i < imageData.length; ++i  )
-    {
-    formData += String.fromCharCode( imageData[ i  ] & 0xff  );
+        // let's encode our image file, which is contained in the var
+        var formData = "--" + boundary + "\r\n"
+        formData += "Content-Disposition: form-data; name='source'; filename='" + filename + "'\r\n";
+        formData += "Content-Type: " + mimeType + "\r\n\r\n";
+        for ( var i = 0; i < imageData.length; ++i  ) {
+            formData += String.fromCharCode( imageData[ i  ] & 0xff  );
+        }
+        formData += "\r\n";
+        formData += "--" + boundary + "\r\n";
+        formData += "Content-Disposition: form-data; name='message'\r\n\r\n";
+        formData += message + "\r\n"
+        formData += "--" + boundary + "--\r\n";
 
-    }
-    formData += "\r\n";
-    formData += "--" + boundary + "\r\n";
-    formData += "Content-Disposition: form-data; name='message'\r\n\r\n";
-    formData += message + "\r\n"
-    formData += "--" + boundary + "--\r\n";
-
-    var xhr = new XMLHttpRequest();
-    xhr.open( "POST", "https://graph.facebook.com/me/photos?access_token=" + authToken + "&debug=all", true  );
-    xhr.onload = xhr.onerror = function() {
-    app.dMessage("Error", xhr.responseText  );
-
-    };
-    xhr.setRequestHeader( "Content-Type", "multipart/form-data; boundary=" + boundary  );
-    xhr.sendAsBinary( formData  );
-
+        var xhr = new XMLHttpRequest();
+        xhr.open( "POST", "https://graph.facebook.com/me/photos?access_token=" + authToken + "&debug=all", true  );
+        xhr.onload = xhr.onerror = function() {
+            app.dMessage("Error", xhr.responseText  );
+        };
+        xhr.setRequestHeader( "Content-Type", "multipart/form-data; boundary=" + boundary  );
+        xhr.sendAsBinary( formData  );
     }
 
     function dataURItoBlob(dataURI,mime) {
@@ -778,7 +810,7 @@ require([
         postData = {
             "id": "scripts/payoutExperiment",
             "function": "winner",
-            "winner" : "tonym415",
+            "winner" : "tonym",
             "url" : "tempBrowseLocal.html",
             "wager_amount" : 10 ,
             "question" : "Yadda or Blah?",
@@ -786,21 +818,7 @@ require([
             "user_response" : "BLAH, BLAH, BLAH",
             "game_id" : 4
             }
-        $.ajax({
-            url: app.social,
-            data: postData,
-            type: "POST",
-            dataType: "json",
-            desc: "Script Test",
-            success: function(result){
-                console.log(result)
-                app.dMessage("Alert", result);
-            },
-            error: function(e){
-                app.dMessage(e.name ,e.message);
-            }
-        })
-        $.unblockUI();
+        genWinnerPage(postData);
     });
 
 
@@ -850,7 +868,7 @@ require([
             stop: function(){
                 $.unblockUI();
                 gameClock.start();
-                $("#gameWait").addClass("hidden");
+                $("#gameWait").addClass("no-display hidden");
             }
         }
     });
@@ -895,7 +913,7 @@ require([
             // set clock based on time limit parameter
             gameClock.setTime(data.time);
             // show waitclock
-            $("#gameWait").removeClass("hidden");
+            $("#gameWait").removeClass("hidden no-display");
             $.blockUI({message: $("#gameWait"), css:{ width: "305px"}});
             waitClock.start();
         }
